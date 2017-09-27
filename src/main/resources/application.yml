@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+security:
+  user:
+    password: changeMe
+
+  oauth2:
+    resource:
+      id: oauth2_id

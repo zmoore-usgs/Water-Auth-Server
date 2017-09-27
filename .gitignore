@@ -1,0 +1,6 @@
+/target/
+/.project
+**/mykeys.jks
+**/public.cert
+/.classpath
+/.settings/
