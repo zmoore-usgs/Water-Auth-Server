@@ -8,3 +8,10 @@ security:
   oauth2:
     resource:
       id: oauth2_id
+
+samlIDPMetadataLocation: /metadata/FederationMetadata.xml
+samlAuthnRequestEntityId: NWIS-RA-CHS-PROD
+samlAuthnRequestProviderName: NWIS-RA-CHS-PROD
+samlKeystoreLocation: /security/samlKeystore.jks
+samlKeystoreDefaultKey: default
+samlKeystorePassword: changeit
