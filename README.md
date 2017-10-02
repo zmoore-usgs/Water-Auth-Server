@@ -48,3 +48,11 @@ These URLs are primarily used internally by the Spring Authentication Manager, r
 - **samlSSOHOKEndpoint** - [Default: /ssohok] The SSO HoK (Holder-of-Key) sub-endpoint to use for handling single-sign-on Spring Security Context creation when the user is a holder of key.
 
 - **samlMetadataEndpoint** - [Default: /metadata] The metadata sub-endpoint to use for retrieving the metadata for the application which can be loaded into the IDP server or used to verify that the other SAML settings have been applied properly.
+
+## Running Locally
+
+The application.yml file in `src/main/resources` should be copied to the project root directory and then the values can be modified to fit your local configuration.
+
+## Docker
+
+This project is configured to work with docker. Each relevant environemnt variable should be converted from the `application.yml` file to a `--env` command on a new docker service.
