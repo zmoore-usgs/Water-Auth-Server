@@ -15,10 +15,10 @@ security:
            prefix: /WEB-INF/views/
            suffix: .jsp
          
-samlIDPMetadataLocation: /metadata/idp-meta.xml
+samlIDPMetadataLocation: classpath:/metadata/idp-meta.xml
 samlAuthnRequestEntityId: urn:test:zmoore:doi:usgs:wma
 samlAuthnRequestProviderName: urn:test:zmoore:doi:usgs:wma
-samlKeystoreLocation: /saml/samlKeystore.jks
+samlKeystoreLocation: classpath:/security/ssocircleKeystore.jks
 samlKeystoreDefaultKey: apollo
 samlKeystorePassword: nalle123
 

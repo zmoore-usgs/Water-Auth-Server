@@ -39,6 +39,7 @@ import org.opensaml.saml2.metadata.provider.MetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.opensaml.saml2.metadata.provider.ResourceBackedMetadataProvider;
 import org.opensaml.util.resource.ClasspathResource;
+import org.opensaml.util.resource.FilesystemResource;
 import org.opensaml.util.resource.ResourceException;
 import org.opensaml.xml.parse.StaticBasicParserPool;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -56,7 +57,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.saml.SAMLAuthenticationProvider;
 import org.springframework.security.saml.SAMLBootstrap;
-import org.springframework.security.saml.SAMLDiscovery;
 import org.springframework.security.saml.SAMLEntryPoint;
 import org.springframework.security.saml.SAMLLogoutFilter;
 import org.springframework.security.saml.SAMLLogoutProcessingFilter;
@@ -264,12 +264,12 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public KeyManager keyManager() {
 		DefaultResourceLoader loader = new DefaultResourceLoader();
-		Resource storeFile = loader.getResource("classpath:" + keystorePath);
+		Resource storeFile = loader.getResource(this.keystorePath);
 		
 		Map<String, String> passwords = new HashMap<String, String>();
-		passwords.put(keystoreDefaultKey,keystorePassword );
+		passwords.put(this.keystoreDefaultKey,this.keystorePassword );
 		
-		return new JKSKeyManager(storeFile, keystorePassword, passwords, keystoreDefaultKey);
+		return new JKSKeyManager(storeFile, this.keystorePassword, passwords, this.keystoreDefaultKey);
 	}
 
 	@Bean
@@ -301,10 +301,10 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	public WebSSOProfileOptions webSSOProfileOptions() {
 		WebSSOProfileOptions webSSOProfileOptions = new WebSSOProfileOptions();
 		webSSOProfileOptions.setIncludeScoping(false);
-		//webSSOProfileOptions.setAuthnContextComparison(AuthnContextComparisonTypeEnumeration.EXACT);
-		//webSSOProfileOptions.setAuthnContexts(authnContexts());
+	//	webSSOProfileOptions.setAuthnContextComparison(AuthnContextComparisonTypeEnumeration.EXACT);
+	//	webSSOProfileOptions.setAuthnContexts(authnContexts());
 		webSSOProfileOptions.setForceAuthN(false);
-		//webSSOProfileOptions.setProviderName(providerName);
+	//	webSSOProfileOptions.setProviderName(providerName);
 		
 		return webSSOProfileOptions;
 	}
@@ -368,28 +368,20 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		return true;
 	}
-	
-	//SSO Circle Test IDP Metadata Provider
-	@Bean
-	@Qualifier("idp-ssocircle")
-	public ExtendedMetadataDelegate ssoCircleExtendedMetadataProvider() throws MetadataProviderException {
-		String idpSSOCircleMetadataURL = "https://idp.ssocircle.com/idp-meta.xml";
-		HTTPMetadataProvider httpMetadataProvider = new HTTPMetadataProvider(this.metadataTimer, httpClient(), idpSSOCircleMetadataURL);
-		httpMetadataProvider.setParserPool(parserPool());
 		
-		ExtendedMetadataDelegate extendedMetadataDelegate = new ExtendedMetadataDelegate(httpMetadataProvider, extendedMetadata());
-		extendedMetadataDelegate.setMetadataTrustCheck(true);
-		extendedMetadataDelegate.setMetadataRequireSignature(false);
-		
-		this.metadataTimer.purge();
-		return extendedMetadataDelegate;
-	}
-	
 	//Local Filesystem Metadata Provider
 	@Bean
 	@Qualifier("idp-doi-saml-local")
 	public ExtendedMetadataDelegate doiSAMLExtendedMetadataProviderLocal() throws MetadataProviderException, ResourceException {
-		ResourceBackedMetadataProvider resourceMetadataProvider = new ResourceBackedMetadataProvider(this.metadataTimer, new ClasspathResource(this.metadataLocation));
+		ResourceBackedMetadataProvider resourceMetadataProvider;
+		
+		//Handle classpath or file system resources
+		if(this.metadataLocation.toLowerCase().startsWith("classpath:")){
+			String classpathLocation = this.metadataLocation.replaceFirst("classpath:", "");
+			resourceMetadataProvider = new ResourceBackedMetadataProvider(this.metadataTimer, new ClasspathResource(classpathLocation));
+		} else {
+			resourceMetadataProvider = new ResourceBackedMetadataProvider(this.metadataTimer, new FilesystemResource(this.metadataLocation));
+		}
 		
 		resourceMetadataProvider.setParserPool(parserPool());
 		
