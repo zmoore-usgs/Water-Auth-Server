@@ -4,3 +4,6 @@
 **/public.cert
 /.classpath
 /.settings/
+**/*.jks
+**/metadata/*.xml
+*.yml
