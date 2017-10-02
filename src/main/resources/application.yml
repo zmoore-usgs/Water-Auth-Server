@@ -8,10 +8,20 @@ security:
   oauth2:
     resource:
       id: oauth2_id
+      
+  spring:
+    mvc:
+       view:
+           prefix: /WEB-INF/views/
+           suffix: .jsp
+         
+samlIDPMetadataLocation: /metadata/idp-meta.xml
+samlAuthnRequestEntityId: urn:test:zmoore:doi:usgs:wma
+samlAuthnRequestProviderName: urn:test:zmoore:doi:usgs:wma
+samlKeystoreLocation: /saml/samlKeystore.jks
+samlKeystoreDefaultKey: apollo
+samlKeystorePassword: nalle123
 
-samlIDPMetadataLocation: /metadata/FederationMetadata.xml
-samlAuthnRequestEntityId: NWIS-RA-CHS-PROD
-samlAuthnRequestProviderName: NWIS-RA-CHS-PROD
-samlKeystoreLocation: /security/samlKeystore.jks
-samlKeystoreDefaultKey: default
-samlKeystorePassword: changeit
+loginSuccessTargetUrl: /home
+loginErrorTargetUrl: /auth-fail
+logoutSuccessTargetUrl: /
