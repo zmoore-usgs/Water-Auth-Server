@@ -301,10 +301,10 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	public WebSSOProfileOptions webSSOProfileOptions() {
 		WebSSOProfileOptions webSSOProfileOptions = new WebSSOProfileOptions();
 		webSSOProfileOptions.setIncludeScoping(false);
-	//	webSSOProfileOptions.setAuthnContextComparison(AuthnContextComparisonTypeEnumeration.EXACT);
-	//	webSSOProfileOptions.setAuthnContexts(authnContexts());
+		webSSOProfileOptions.setAuthnContextComparison(AuthnContextComparisonTypeEnumeration.EXACT);
+		webSSOProfileOptions.setAuthnContexts(authnContexts());
 		webSSOProfileOptions.setForceAuthN(false);
-	//	webSSOProfileOptions.setProviderName(providerName);
+		webSSOProfileOptions.setProviderName(providerName);
 		
 		return webSSOProfileOptions;
 	}
@@ -415,6 +415,7 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 		metadataGenerator.setExtendedMetadata(extendedMetadata());
 		metadataGenerator.setIncludeDiscoveryExtension(false);
 		metadataGenerator.setKeyManager(keyManager()); 
+		metadataGenerator.setRequestSigned(false);
 		return metadataGenerator;
 	}
 
