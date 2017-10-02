@@ -1,20 +1,20 @@
 server:
-  port: 8080
+    port: 8080
 
 security:
-  user:
+    user:
     password: changeMe
 
-  oauth2:
+oauth2:
     resource:
-      id: oauth2_id
-      
-  spring:
+        id: oauth2_id
+
+spring:
     mvc:
-       view:
-           prefix: /WEB-INF/views/
-           suffix: .jsp
-         
+        view:
+            prefix: /WEB-INF/views/
+            suffix: .jsp
+
 samlIDPMetadataLocation: classpath:/metadata/metadata.xml
 samlAuthnRequestEntityId: entityId
 samlAuthnRequestProviderName: provideName
