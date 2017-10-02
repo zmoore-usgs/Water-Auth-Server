@@ -1,3 +1,7 @@
+/**
+ * Class  structure modeled after: https://github.com/vdenotaris/spring-boot-security-saml-sample/blob/master/src/main/java/com/vdenotaris/spring/boot/security/saml/web/config/WebSecurityConfig.java
+ */
+
 package gov.usgs.wma.mlrauthserver.config;
 
 import java.util.ArrayList;
