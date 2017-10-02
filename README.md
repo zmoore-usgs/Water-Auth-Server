@@ -55,4 +55,14 @@ The application.yml file in `src/main/resources` should be copied to the project
 
 ## Docker
 
-This project is configured to work with docker. Each relevant environemnt variable should be converted from the `application.yml` file to a `--env` command on a new docker service.
+This project is configured to work with docker. Each relevant environemnt variable should be converted from the `application.yml` file to a `--env` command on a new docker service. The built JAR will be fetched from the MLR Artifactory when the image is built. The version of the JAR to grab must be passed as a build argument with: `mlr_version`
+
+### Docker Keystore Generation
+
+The dockerfile is configured to automatically generate a keystore for the deployed service to use. The parameters of the generated keystore can be modified using the following docker build arguments:
+
+- **keystore_pass** - [Default: changeit] The password to use for the keystore as well as the default key.
+
+- **keystore_name** - [Default: keystore.jks] The name to give the generated keystore. This name is used literally, meaning if no extension is supplied the generated keystore will have no extension.
+
+- **keystore_default_key** - [Default: default] The default key alias to generate along with the keystore.
