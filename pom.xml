@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>gov.usgs.wma</groupId>
     <artifactId>waterauthserver</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <parent>
@@ -17,6 +17,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <springfox.version>2.7.0</springfox.version>
+        <additionalparam>-Xdoclint:none</additionalparam>
         <wma.artifactory.url>https://cida.usgs.gov/artifactory</wma.artifactory.url>
 
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -26,14 +27,14 @@
 
     <distributionManagement>
         <repository>
-            <id>central</id>
+            <id>releases</id>
             <name>cidasdpdasartip.cr.usgs.gov-releases</name>
-            <url>${wma.artifactory.url}/mlr-maven</url>
+            <url>${wma.artifactory.url}/mlr-maven-releases</url>
         </repository>
         <snapshotRepository>
             <id>snapshots</id>
             <name>cidasdpdasartip.cr.usgs.gov-snapshots</name>
-            <url>${wma.artifactory.url}/mlr-maven</url>
+            <url>${wma.artifactory.url}/mlr-maven-snapshots</url>
         </snapshotRepository>
     </distributionManagement>
 
@@ -117,5 +118,10 @@
 			</plugin>
 		</plugins>
 	</build>
-
+    <scm>
+        <connection>scm:git:https://github.com/USGS-CIDA/Water-Auth-Server.git</connection>
+        <developerConnection>scm:git:https://github.com/USGS-CIDA/Water-Auth-Server.git</developerConnection>
+        <url>https://github.com/USGS-CIDA/Water-Auth-Server</url>
+        <tag>HEAD</tag>
+    </scm>
 </project>
