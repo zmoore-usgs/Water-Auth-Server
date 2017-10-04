@@ -15,12 +15,12 @@ spring:
             prefix: /WEB-INF/views/
             suffix: .jsp
 
-samlIDPMetadataLocation: classpath:/metadata/metadata.xml
-samlAuthnRequestEntityId: entityId
-samlAuthnRequestProviderName: provideName
-samlKeystoreLocation: classpath:/security/mykeystore.jks
-samlKeystoreDefaultKey: default
-samlKeystorePassword: changeit
+samlIDPMetadataLocation: classpath:/metadata/idp-meta.xml
+samlAuthnRequestEntityId: urn:test:zmoore:doi:usgs:wma
+samlAuthnRequestProviderName: urn:test:zmoore:doi:usgs:wma
+samlKeystoreLocation: classpath:/security/ssocircleKeystore.jks
+samlKeystoreDefaultKey: apollo
+samlKeystorePassword: nalle123
 
 loginSuccessTargetUrl: /home
 loginErrorTargetUrl: /auth-fail

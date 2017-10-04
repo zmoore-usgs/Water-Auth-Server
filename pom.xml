@@ -4,7 +4,7 @@
     <groupId>gov.usgs.wma</groupId>
     <artifactId>waterauthserver</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
 
     <parent>
         <groupId>org.springframework.boot</groupId>

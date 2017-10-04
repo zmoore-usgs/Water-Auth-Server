@@ -36,6 +36,7 @@ import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -251,8 +252,16 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public KeyManager keyManager() {
-		DefaultResourceLoader loader = new DefaultResourceLoader();
-		Resource storeFile = loader.getResource(this.keystorePath);
+		Resource storeFile;
+		
+		if(this.keystorePath.toLowerCase().startsWith("classpath:")){
+			DefaultResourceLoader loader = new DefaultResourceLoader();
+			String classpathLocation = this.keystorePath.replaceFirst("classpath:", "");
+			storeFile = loader.getResource(classpathLocation);
+		} else {
+			FileSystemResourceLoader loader = new FileSystemResourceLoader();
+			storeFile = loader.getResource(this.keystorePath);
+		}
 		
 		Map<String, String> passwords = new HashMap<String, String>();
 		passwords.put(this.keystoreDefaultKey,this.keystorePassword );
@@ -336,12 +345,7 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public List<MetadataProvider> metadataProviders() throws MetadataProviderException, ResourceException {
 		List<MetadataProvider> metadataProviders = new ArrayList<>();
-		
-		if(isLocalMetadata()){
-			metadataProviders.add(doiSAMLExtendedMetadataProviderLocal());
-		} else {
-			metadataProviders.add(doiSAMLExtendedMetadataProvider());
-		}
+		metadataProviders.add(doiSAMLExtendedMetadataProvider());
 		
 		return metadataProviders;
 	}
@@ -356,46 +360,39 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		return true;
 	}
-		
-	//Local Filesystem Metadata Provider
+
 	@Bean
-	@Qualifier("idp-doi-saml-local")
-	public ExtendedMetadataDelegate doiSAMLExtendedMetadataProviderLocal() throws MetadataProviderException, ResourceException {
-		ResourceBackedMetadataProvider resourceMetadataProvider;
+	@Qualifier("idp-doi-saml")
+	public ExtendedMetadataDelegate doiSAMLExtendedMetadataProvider() throws MetadataProviderException, ResourceException {
+		ExtendedMetadataDelegate extendedMetadataDelegate;
 		
-		//Handle classpath or file system resources
-		if(this.metadataLocation.toLowerCase().startsWith("classpath:")){
-			String classpathLocation = this.metadataLocation.replaceFirst("classpath:", "");
-			resourceMetadataProvider = new ResourceBackedMetadataProvider(this.metadataTimer, new ClasspathResource(classpathLocation));
+		//Handle HTTP vs local metadata location
+		if(isLocalMetadata()){
+			ResourceBackedMetadataProvider resourceMetadataProvider;
+		
+			//Handle classpath or file system resources
+			if(this.metadataLocation.toLowerCase().startsWith("classpath:")){
+				String classpathLocation = this.metadataLocation.replaceFirst("classpath:", "");
+				resourceMetadataProvider = new ResourceBackedMetadataProvider(this.metadataTimer, new ClasspathResource(classpathLocation));
+			} else {
+				resourceMetadataProvider = new ResourceBackedMetadataProvider(this.metadataTimer, new FilesystemResource(this.metadataLocation));
+			}
+
+			resourceMetadataProvider.setParserPool(parserPool());
+			extendedMetadataDelegate = new ExtendedMetadataDelegate(resourceMetadataProvider, extendedMetadata());
 		} else {
-			resourceMetadataProvider = new ResourceBackedMetadataProvider(this.metadataTimer, new FilesystemResource(this.metadataLocation));
+			HTTPMetadataProvider httpMetadataProvider = new HTTPMetadataProvider(this.metadataTimer, httpClient(), this.metadataLocation);
+			httpMetadataProvider.setParserPool(parserPool());
+			 extendedMetadataDelegate = new ExtendedMetadataDelegate(httpMetadataProvider, extendedMetadata());
 		}
 		
-		resourceMetadataProvider.setParserPool(parserPool());
-		
-		ExtendedMetadataDelegate extendedMetadataDelegate = new ExtendedMetadataDelegate(resourceMetadataProvider, extendedMetadata());
 		extendedMetadataDelegate.setMetadataTrustCheck(false);
 		extendedMetadataDelegate.setMetadataRequireSignature(false);
-		
+
 		this.metadataTimer.purge();
 		return extendedMetadataDelegate;
 	}
 	
-	//Remote HTTP Metadata Provider
-	@Bean
-	@Qualifier("idp-doi-saml-http")
-	public ExtendedMetadataDelegate doiSAMLExtendedMetadataProvider() throws MetadataProviderException {
-		HTTPMetadataProvider httpMetadataProvider = new HTTPMetadataProvider(this.metadataTimer, httpClient(), this.metadataLocation);
-		httpMetadataProvider.setParserPool(parserPool());
-		
-		ExtendedMetadataDelegate extendedMetadataDelegate = new ExtendedMetadataDelegate(httpMetadataProvider, extendedMetadata());
-		extendedMetadataDelegate.setMetadataTrustCheck(false);
-		extendedMetadataDelegate.setMetadataRequireSignature(false);
-		
-		this.metadataTimer.purge();
-		return extendedMetadataDelegate;
-	}
-
 	@Bean
 	public MetadataGenerator metadataGenerator() {
 		MetadataGenerator metadataGenerator = new MetadataGenerator();
