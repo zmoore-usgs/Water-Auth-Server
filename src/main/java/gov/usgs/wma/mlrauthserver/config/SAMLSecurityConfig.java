@@ -97,11 +97,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	//Keystore Configuration
-	@Value("${samlKeystoreLocation}")
+	@Value("${keystoreLocation}")
 	private String keystorePath;
-	@Value("${samlKeystoreDefaultKey}")
+	@Value("${keystoreDefaultKey}")
 	private String keystoreDefaultKey;
-	@Value("${samlKeystorePassword}")
+	@Value("${keystorePassword}")
 	private String keystorePassword;
 	
 	//SAML IDP Configuration
@@ -473,7 +473,6 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 		return new SAMLLogoutFilter(successLogoutHandler(), new LogoutHandler[] { logoutHandler() }, new LogoutHandler[] { logoutHandler() });
 	}
 
-	// Processor
 	@Bean
 	public SAMLProcessorImpl processor() {
 		Collection<SAMLBinding> bindings = new ArrayList<SAMLBinding>();

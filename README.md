@@ -12,14 +12,16 @@ The authentication request sent from the application to the SAML IDP server can 
 
 - **samlAuthnRequestProviderName** - [Default: *empty*] The provider name to specify for the request. This value is optional.
 
-### SAML Keystore
-A keystore is used by the SAML service to ensure secure communication with the IDP server. Your keystore should contain the certs used on the IDP server as well as any certs required to reach your metadata XML if it is being supplied via http. 
+### Keystore
+A keystore is used by the SAML service to ensure secure communication with the IDP server. Your keystore should contain the certs used on the IDP server as well as any certs required to reach your metadata XML if it is being supplied via http. The same keystore is also used by the Oauth2 portion of the application in order to sign JWT tokens.
 
-- **samlKeystoreLocation** - The file path to the keystore to be used for saml. The file can be loaded from the classpath by prepending "classpath:" to the start of the file path.
+- **kKeystoreLocation** - The file path to the keystore to be used for saml. The file can be loaded from the classpath by prepending "classpath:" to the start of the file path.
 
-- **samlKeystoreDefaultKey** - The default key of the keystore.
+- **keystoreDefaultKey** - The default key of the keystore.
 
-- **samlKeystorePassword** - The password used to access the keystore.
+- **keystorePassword** - The password used to access the keystore.
+
+- **keystoreTokenSigningKey** - The key alias to use for singing Oauth2 tokens. Note that this key alias **must** be different from the default key alias when running this application in Docker using the provided Dockerfile.
 
 ### SAML Login/Logout URL Routing
 The login success and error as well as logout success URLs can be customized. These are the URLs that the client will be redirected to upon logging in or out, based on the status of that action.
