@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.FileSystemResourceLoader;
+import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -27,6 +29,14 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
 	@Value("${security.oauth2.resource.id}")
 	private String resourceId;
+	@Value("${keystoreLocation}")
+	private String keystorePath;
+	@Value("${keystoreDefaultKey}")
+	private String keystoreDefaultKey;
+	@Value("${keystoreTokenSigningKey}")
+	private String keystoreTokenSigningKey;
+	@Value("${keystorePassword}")
+	private String keystorePassword;
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -59,12 +69,22 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
+		Resource storeFile;
+		
+		if(this.keystorePath.toLowerCase().startsWith("classpath:")){
+			DefaultResourceLoader loader = new DefaultResourceLoader();
+			String classpathLocation = this.keystorePath.replaceFirst("classpath:", "");
+			storeFile = loader.getResource(classpathLocation);
+		} else {
+			FileSystemResourceLoader loader = new FileSystemResourceLoader();
+			storeFile = loader.getResource(this.keystorePath);
+		}
+		
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 		KeyStoreKeyFactory keyStoreKeyFactory =
-				new KeyStoreKeyFactory(
-						new ClassPathResource("mykeys.jks"),
-						"mypass".toCharArray());
-		converter.setKeyPair(keyStoreKeyFactory.getKeyPair("mykeys"));
+				new KeyStoreKeyFactory(storeFile,this.keystorePassword.toCharArray());
+		converter.setKeyPair(keyStoreKeyFactory.getKeyPair(this.keystoreTokenSigningKey));
+		
 		return converter;
 	}
 

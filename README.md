@@ -12,14 +12,16 @@ The authentication request sent from the application to the SAML IDP server can 
 
 - **samlAuthnRequestProviderName** - [Default: *empty*] The provider name to specify for the request. This value is optional.
 
-### SAML Keystore
-A keystore is used by the SAML service to ensure secure communication with the IDP server. Your keystore should contain the certs used on the IDP server as well as any certs required to reach your metadata XML if it is being supplied via http. 
+### Keystore
+A keystore is used by the SAML service to ensure secure communication with the IDP server. Your keystore should contain the certs used on the IDP server as well as any certs required to reach your metadata XML if it is being supplied via http. The same keystore is also used by the Oauth2 portion of the application in order to sign JWT tokens.
 
-- **samlKeystoreLocation** - The file path to the keystore to be used for saml. The file can be loaded from the classpath by prepending "classpath:" to the start of the file path.
+- **keystoreLocation** - The file path to the keystore to be used for saml. The file can be loaded from the classpath by prepending "classpath:" to the start of the file path.
 
-- **samlKeystoreDefaultKey** - The default key of the keystore.
+- **keystoreDefaultKey** - The default key of the keystore.
 
-- **samlKeystorePassword** - The password used to access the keystore.
+- **keystorePassword** - The password used to access the keystore.
+
+- **keystoreTokenSigningKey** - The key alias to use for singing Oauth2 tokens. Note that this key alias **must** be different from the default key alias when running this application in Docker using the provided Dockerfile.
 
 ### SAML Login/Logout URL Routing
 The login success and error as well as logout success URLs can be customized. These are the URLs that the client will be redirected to upon logging in or out, based on the status of that action.
@@ -59,10 +61,14 @@ This project is configured to work with docker. Each relevant environemnt variab
 
 ### Docker Keystore Generation
 
-The dockerfile is configured to automatically generate a keystore for the deployed service to use. The parameters of the generated keystore can be modified using the following docker build arguments:
+The dockerfile is configured to automatically generate a keystore for the deployed service to use based on the provided values for the keystore related environment variables. If you are using an https location for your SAML IDP Metadata then the cert IDP server will need to be added to the keystore. This can be configured using the following environment variables:
 
-- **keystore_pass** - [Default: changeit] The password to use for the keystore as well as the default key.
+- **samlIdpHost** - The host of the SAML IDP server that you are connecting to
 
-- **keystore_name** - [Default: keystore.jks] The name to give the generated keystore. This name is used literally, meaning if no extension is supplied the generated keystore will have no extension.
+- **samlIdpPort** - The port of the SAML IDP server that you are connecting to. If the metadata is being served through abrowser from an https url then this is likely 443.
 
-- **keystore_default_key** - [Default: default] The default key alias to generate along with the keystore.
+### DOI Root Cert
+
+If you are using an http location for your SAML IDP metadata and you are working from within the USGS network you will also need to inject the DOI root cert. This cert can be added by setting the following environemnt variable to true:
+
+- **use_doi_cert** - [Default: false] Whether or not to include the DOI Root Cert in the keystore for the application.
