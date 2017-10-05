@@ -59,10 +59,14 @@ This project is configured to work with docker. Each relevant environemnt variab
 
 ### Docker Keystore Generation
 
-The dockerfile is configured to automatically generate a keystore for the deployed service to use. The parameters of the generated keystore can be modified using the following docker build arguments:
+The dockerfile is configured to automatically generate a keystore for the deployed service to use based on the provided values for the keystore related environment variables. If you are using an https location for your SAML IDP Metadata then the cert IDP server will need to be added to the keystore. This can be configured using the following environment variables:
 
-- **keystore_pass** - [Default: changeit] The password to use for the keystore as well as the default key.
+- **samlIdpHost** - The host of the SAML IDP server that you are connecting to
 
-- **keystore_name** - [Default: keystore.jks] The name to give the generated keystore. This name is used literally, meaning if no extension is supplied the generated keystore will have no extension.
+- **samlIdpPort** - The port of the SAML IDP server that you are connecting to. If the metadata is being served through abrowser from an https url then this is likely 443.
 
-- **keystore_default_key** - [Default: default] The default key alias to generate along with the keystore.
+### DOI Root Cert
+
+If you are using an http location for your SAML IDP metadata and you are working from within the USGS network you will also need to inject the DOI root cert. This cert can be added by setting the following environemnt variable to true:
+
+- **use_doi_cert** - [Default: false] Whether or not to include the DOI Root Cert in the keystore for the application.
