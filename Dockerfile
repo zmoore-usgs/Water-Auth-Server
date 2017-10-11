@@ -7,6 +7,6 @@ RUN ["chmod", "+x", "entrypoint.sh"]
 
 RUN  curl -k -X GET "https://cida.usgs.gov/artifactory/mlr-maven-centralized/gov/usgs/wma/waterauthserver/$mlr_version/waterauthserver-$mlr_version.war" > app.war
 
-EXPOSE 8080
+EXPOSE 8443
 
 ENTRYPOINT [ "/entrypoint.sh" ]

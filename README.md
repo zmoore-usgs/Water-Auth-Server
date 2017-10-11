@@ -3,7 +3,7 @@
 ### SAML IDP Metadata
 This service can consume the metadata from a SAML Idnetity Provider either from a local file or from an HTTP URL.
 
-- **samlIDPMetadataLocation** - The local file path or http(s) URL location of the SAML IDP Server metadata xml. The file can be loaded from the classpath by prepending "classpath:" to the start of the file path.
+- **samlIdpMetadataLocation** - The local file path or http(s) URL location of the SAML IDP Server metadata xml. The file can be loaded from the classpath by prepending "classpath:" to the start of the file path.
 
 ### SAML IDP AuthNRequest Configuration
 The authentication request sent from the application to the SAML IDP server can be customized using the properties below. entityID must always be specified, however providerName is optional.

@@ -105,7 +105,7 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	private String keystorePassword;
 	
 	//SAML IDP Configuration
-	@Value("${samlIDPMetadataLocation}")
+	@Value("${samlIdpMetadataLocation}")
 	private String metadataLocation;
 	@Value("${samlAuthnRequestProviderName:}")
 	private String providerName;
