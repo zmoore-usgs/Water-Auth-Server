@@ -59,9 +59,9 @@ The application.yml file in `src/main/resources` should be copied to the project
 
 This project is configured to work with docker. Each relevant environemnt variable should be converted from the `application.yml` file to a `--env` command on a new docker service. The built JAR will be fetched from the MLR Artifactory when the image is built. The version of the JAR to grab must be passed as a build argument with: `mlr_version`
 
-### Docker Keystore Generation
+### Keystore
 
-The dockerfile is configured to automatically generate a keystore for the deployed service to use based on the provided values for the keystore related environment variables. If you are using an https location for your SAML IDP Metadata then the cert IDP server will need to be added to the keystore. This can be configured using the following environment variables:
+The dockerfile does not include automatic keystore generation, rather a pre-built keystore should be passed in using a docker secret or docker config. The mounted location of this keystore should then be passed in through the `keystoreLocation` environment variable. During the container startup the keystore will be modified to include the public cert of the IDP server in order to allow metadata pulling. The IDP cert properties are listed below.
 
 - **samlIdpHost** - The host of the SAML IDP server that you are connecting to
 
