@@ -1,10 +1,9 @@
 #!/bin/sh
 set -x
 
-keystorePassword = `cat /run/secrets/waterauthserver_KEYSTORE_PASSWORD`
-certFileLocation = '/run/secrets/waterauthserver_WATER_AUTH_KEYS'
+set keystorePassword = `cat $KEYSTORE_PASSWORD_FILE`
 
-keytool -v -importkeystore -srckeystore $certFileLocation -srcstoretype PKCS12 -srcstorepass $keystorePassword -destkeystore $keystoreLocation -deststoretype JKS -deststorepass $keystorePassword -noprompt
+keytool -v -importkeystore -srckeystore $WATER_AUTH_KEYS_FILE -srcstoretype PKCS12 -srcstorepass $keystorePassword -destkeystore $keystoreLocation -deststoretype JKS -deststorepass $keystorePassword -noprompt
 
 echo _________ Finished loading certs from PKCS12 _________
 
