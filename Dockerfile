@@ -5,8 +5,7 @@ ARG mlr_version
 ADD docker-entrypoint.sh entrypoint.sh
 RUN ["chmod", "+x", "entrypoint.sh"]
 
-ADD target/waterauthserver-0.1-SNAPSHOT.war app.war
-#RUN  curl -k -X GET "https://cida.usgs.gov/artifactory/mlr-maven-centralized/gov/usgs/wma/waterauthserver/$mlr_version/waterauthserver-$mlr_version.war" > app.war
+RUN  curl -k -X GET "https://cida.usgs.gov/artifactory/mlr-maven-centralized/gov/usgs/wma/waterauthserver/$mlr_version/waterauthserver-$mlr_version.war" > app.war
 
 EXPOSE 8443
 
