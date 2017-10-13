@@ -1,7 +1,7 @@
 #!/bin/sh
 set -x
 
-keystorePassword = `cat $KEYSTORE_PASSWORD_FILE`
+keystorePassword = `cat /run/secrets/$waterauthserver_KEYSTORE_PASSWORD`
 
 keytool -v -importkeystore -srckeystore $certFileLocation -srcstoretype PKCS12 -srcstorepass $keystorePassword -destkeystore $keystoreLocation -deststoretype JKS -deststorepass $keystorePassword -noprompt
 
