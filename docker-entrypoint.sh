@@ -11,6 +11,6 @@ if [ -n "$samlIdpHost" ] ; then openssl s_client -host $samlIdpHost -port $samlI
 if [ -n "$samlIdpHost" ] ; then keytool  -importcert -file samlidp.crt -alias samlidp -keystore $keystoreLocation -storepass $keystorePassword -noprompt; fi
 
 keytool -list -keystore $keystoreLocation -storepass $keystorePassword
-java -Djava.security.egd=file:/dev/./urandom -jar app.war
+java -Djava.security.egd=file:/dev/./urandom -DkeystorePassword=$keystorePassword -jar app.war
 
 exec $?
