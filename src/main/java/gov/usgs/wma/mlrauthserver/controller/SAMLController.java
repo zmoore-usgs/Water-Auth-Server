@@ -1,6 +1,7 @@
 package gov.usgs.wma.mlrauthserver.controller;
 
 import gov.usgs.wma.mlrauthserver.util.SAMLUtils;
+import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,10 +28,12 @@ public class SAMLController {
 		SAMLCredential credentials = (SAMLCredential) authentication.getCredentials();
 		String attributeHtml = "<ul>";
 		
-		Map<String,String> attributeMap = SAMLUtils.getSingularAttributeValueMap(credentials);
+		Map<String,List<String>> attributeMap = SAMLUtils.getAttributeValueMap(credentials);
 				
-		for(Map.Entry<String, String> entry : attributeMap.entrySet()){
-			attributeHtml += "<li>" + entry.getKey() + ": " + entry.getValue() + "</li>";
+		for(Map.Entry<String, List<String>> entry : attributeMap.entrySet()){
+			for(String value : entry.getValue()){
+				attributeHtml += "<li>" + entry.getKey() + ": " + value + "</li>";
+			}
 		}
 		
 		attributeHtml += "</ul>";

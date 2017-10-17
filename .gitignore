@@ -1,9 +1,9 @@
 /target/
 /.project
-**/mykeys.jks
-**/public.cert
 /.classpath
 /.settings/
 **/*.jks
 **/metadata/*.xml
 *.yml
+**/*.p12
+**/*.crt

@@ -1,6 +1,8 @@
 package gov.usgs.wma.mlrauthserver.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.opensaml.saml2.core.Attribute;
@@ -16,16 +18,18 @@ public class SAMLUtils {
 	// Logger
 	private static final Logger LOG = LoggerFactory.getLogger(SAMLUtils.class);
 	
-	public static  Map<String,String> getSingularAttributeValueMap(SAMLCredential credentials){
-		Map<String,String> returnMap = new HashMap<>();
+	public static  Map<String,List<String>> getAttributeValueMap(SAMLCredential credentials){
+		Map<String,List<String>> returnMap = new HashMap<>();
 		
 		for(Attribute attr : credentials.getAttributes()){
 			if(attr.getAttributeValues().size() > 0){
-				if(attr.getAttributeValues().size() > 1){
-					LOG.warn("SAML Attribute " + attr.getName() + " contains more than one value. Only the first value will be returned.");
+				List<String> returnList = new ArrayList<>();
+				
+				for(XMLObject attrValue : attr.getAttributeValues()){
+					returnList.add(getAttributeTextValue(attrValue));
 				}
 				
-				returnMap.put(attr.getName(), getAttributeTextValue(attr.getAttributeValues().get(0)));
+				returnMap.put(attr.getName(), returnList);
 			}			
 		}
 		
