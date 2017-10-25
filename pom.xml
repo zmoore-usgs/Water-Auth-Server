@@ -4,12 +4,12 @@
     <groupId>gov.usgs.wma</groupId>
     <artifactId>waterauthserver</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.7.RELEASE</version>
+        <version>1.5.8.RELEASE</version>
     </parent>
 
     <properties>
@@ -70,26 +70,6 @@
 		<groupId>org.springframework.security</groupId>
 		<artifactId>spring-security-jwt</artifactId>
 	</dependency>
-		 
-        <!-- Tomcat embedded container-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- JSTL for JSP -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-        </dependency>
-
-        <!-- Need this to compile JSP -->
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-jasper</artifactId>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
     <dependencyManagement>
