@@ -12,3 +12,10 @@ keystorePassword: changeit
 loginSuccessTargetUrl: /home
 loginErrorTargetUrl: /auth-fail
 logoutSuccessTargetUrl: /
+
+server:
+    port: ${serverPort:8443}
+    ssl:
+        key-store: ${keystoreLocation}
+        key-store-password: ${keystorePassword}
+        key-password: ${keystorePassword} 
