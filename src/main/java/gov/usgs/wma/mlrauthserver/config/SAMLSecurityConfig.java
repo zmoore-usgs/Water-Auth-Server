@@ -15,7 +15,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import gov.usgs.wma.mlrauthserver.service.SAMLUserDetailsImpl;
-
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.protocol.Protocol;
@@ -40,7 +39,6 @@ import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -94,7 +92,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
 public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	//Keystore Configuration
 	@Value("${keystoreLocation}")
@@ -135,7 +132,7 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	private String logoutSuccessTargetUrl;
 	@Value("${loginErrorTargetUrl:/error}")
 	private String loginErrorTargetUrl;
-	
+		
 	private Timer metadataTimer;
 	private MultiThreadedHttpConnectionManager multiThreadedHttpConnectionManager;
 
@@ -523,19 +520,20 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 			.addFilterAfter(samlFilter(), BasicAuthenticationFilter.class);
 		http        
 			.authorizeRequests()
+			.antMatchers(this.samlBaseEndpoint + "/**").permitAll()
 			.antMatchers(this.logoutSuccessTargetUrl).permitAll()
 			.antMatchers(this.loginErrorTargetUrl).permitAll()
-			.antMatchers(this.samlBaseEndpoint + "/**").permitAll()
+			.antMatchers("/login").permitAll()
+			.antMatchers("/oauth/authorize").permitAll()
 			.anyRequest().authenticated();
 		http
 			.logout()
 				.logoutSuccessUrl(this.logoutSuccessTargetUrl);
 	}
-
+	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth
-			.authenticationProvider(samlAuthenticationProvider());
+		auth.authenticationProvider(samlAuthenticationProvider());
 	}   
 
 }
