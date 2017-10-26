@@ -20,11 +20,11 @@ public class SAMLUserDetailsImpl implements SAMLUserDetailsService  {
 	// Logger
 	private static final Logger LOG = LoggerFactory.getLogger(SAMLUserDetailsImpl.class);
 	
-	@Value("${samlGroupAttributeName:}")
+	@Value("${samlGroupAttributeName}")
 	private String samlGroupAttributeName;
-	@Value("${samlEmailAttributeName:}")
+	@Value("${samlEmailAttributeName}")
 	private String samlEmailAttributeName;
-	@Value("${samlUsernameAttributeName:}")
+	@Value("${samlUsernameAttributeName}")
 	private String samlUsernameAttributeName;
 	
 	@Override

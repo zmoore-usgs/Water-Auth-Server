@@ -5,6 +5,9 @@ security:
 samlIdpMetadataLocation: classpath:/metadata/metadata.xml
 samlAuthnRequestEntityId: entityId
 samlAuthnRequestProviderName: providerName
+samlGroupAttributeName: http://schemas.xmlsoap.org/claims/Group
+samlEmailAttributeName: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress
+samlUsernameAttributeName: http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname
 keystoreLocation: classpath:/security/keystore.jks
 keystoreDefaultKey: default
 keystoreTokenSigningKey: oauth
