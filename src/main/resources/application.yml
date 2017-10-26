@@ -9,7 +9,7 @@ keystoreLocation: classpath:/security/keystore.jks
 keystoreDefaultKey: default
 keystoreTokenSigningKey: oauth
 keystorePassword: changeit
-loginSuccessTargetUrl: /home
+loginSuccessTargetUrl: /
 loginErrorTargetUrl: /auth-fail
 logoutSuccessTargetUrl: /
 
@@ -19,3 +19,17 @@ server:
         key-store: ${keystoreLocation}
         key-store-password: ${keystorePassword}
         key-password: ${keystorePassword} 
+        
+spring:
+ session:
+   store-type: jdbc
+   timeout: 43200 #12 hours
+   jdbc:
+     initializer:
+       enabled: true
+     schema: classpath:org/springframework/session/jdbc/schema-mysql.sql
+     table-name: SPRING_SESSION
+ datasource:
+   url: jdbc:mysql://192.168.99.101:3306/waterauth
+   username: waterauth
+   password: waterauth
