@@ -28,6 +28,8 @@ public class PersistenceConfig {
 	private String dbPassword;
 	@Value("${dbInitializerEnabled:true}")
 	private Boolean dbInitializerEnabled;
+	@Value("${dbSchemaType}")
+	private String dbSchemaType;
 	
 	@Primary
 	@Bean
@@ -55,7 +57,7 @@ public class PersistenceConfig {
 		ResourceDatabasePopulator databasePopulator = new ResourceDatabasePopulator();
 		dataSourceInitializer.setDatabasePopulator(databasePopulator);
 
-		String sessionSchema = "org/springframework/session/jdbc/schema-mysql.sql";
+		String sessionSchema = "org/springframework/session/jdbc/schema-"+dbSchemaType+".sql";
 		String clientSchema = "spring_security_oauth2_mysql.sql";
 		databasePopulator.addScript(new ClassPathResource(sessionSchema));
 		databasePopulator.addScript(new ClassPathResource(clientSchema));
