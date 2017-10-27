@@ -28,11 +28,4 @@ spring:
    store-type: jdbc
    timeout: 43200 #12 hours
    jdbc:
-     initializer:
-       enabled: true
-     schema: classpath:org/springframework/session/jdbc/schema-mysql.sql
      table-name: SPRING_SESSION
- datasource:
-   url: jdbc:mysql://192.168.99.101:3306/waterauth
-   username: waterauth
-   password: waterauth

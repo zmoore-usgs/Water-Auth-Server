@@ -1,5 +1,6 @@
 package gov.usgs.wma.mlrauthserver.config;
 
+import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,6 +41,9 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 	@Qualifier("samlEntryPoint")
 	private SAMLEntryPoint samlEntryPoint;
 	
+	@Autowired
+	private DataSource dataSource;
+	
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
 		oauthServer
@@ -50,12 +54,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		clients.inMemory()
-		.withClient("trusted-app")
-		.authorizedGrantTypes("authorization_code", "access_token")
-		.scopes("user_info")
-		.secret("secret")
-		.autoApprove(true) ;
+		clients.jdbc(this.dataSource);
 	}
 
 	@Bean
@@ -102,5 +101,4 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 		.tokenStore(tokenStore())
 		.accessTokenConverter(accessTokenConverter());
 	}
-
 }
