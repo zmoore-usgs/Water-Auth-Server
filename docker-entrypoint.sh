@@ -3,9 +3,9 @@ set -x
 
 keystorePassword=`cat $KEYSTORE_PASSWORD_FILE`
 
-openssl pkcs12 -export -in $OAUTH_CERT -inkey $OAUTH_KEY -name $keystoreDefaultKey -out oauth.p12
-openssl pkcs12 -export -in $SAML_CERT -inkey $SAML_KEY -name $keystoreTokenSigningKey -out saml.p12
-openssl pkcs12 -export -in $TOMCAT_CERT -inkey $TOMCAT_KEY -name tomcat -out tomcat.p12
+openssl pkcs12 -export -in $waterauthserver_TOKEN_CERT_path -inkey $waterauthserver_TOKEN_KEY_path -name $keystoreDefaultKey -out oauth.p12
+openssl pkcs12 -export -in $waterauthserver_SAML_CERT_path -inkey $waterauthserver_SAML_KEY_path -name $keystoreTokenSigningKey -out saml.p12
+openssl pkcs12 -export -in $waterauthserver_TOMCAT_CERT_path -inkey $waterauthserver_TOMCAT_KEY_path -name tomcat -out tomcat.p12
 
 keytool -v -importkeystore -deststorepass $keystorePassword -destkeystore $keystoreLocation -srckeystore oauth.p12 -srcstoretype PKCS12
 keytool -v -importkeystore -deststorepass $keystorePassword -destkeystore $keystoreLocation -srckeystore saml.p12 -srcstoretype PKCS12
