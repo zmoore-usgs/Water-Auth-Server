@@ -14,7 +14,6 @@ import java.util.Timer;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import gov.usgs.wma.mlrauthserver.service.SAMLUserDetailsImpl;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.protocol.Protocol;
@@ -34,6 +33,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.core.io.Resource;
@@ -90,8 +90,11 @@ import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuc
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import gov.usgs.wma.mlrauthserver.service.SAMLUserDetailsImpl;
+
 @Configuration
 @EnableWebSecurity
+@Profile("default")
 public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	//Keystore Configuration
 	@Value("${keystoreLocation}")
