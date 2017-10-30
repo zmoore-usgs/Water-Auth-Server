@@ -7,9 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @SuppressWarnings("serial")
 public class WaterAuthUser implements UserDetails {
-	public static final String USERNAME_JWT_KEY = "saml_username";
-	public static final String EMAIL_JWT_KEY = "saml_email";
-	public static final String USER_ID_JWT_KEY = "saml_user_id";
 	private String username;
 	private String email;
 	private String userId;
