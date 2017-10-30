@@ -37,7 +37,7 @@ public class SAMLUserDetailsImpl implements SAMLUserDetailsService  {
 				
 		LOG.info(userID + " logged in.");
 						
-		return new WaterAuthUser(userID, username, email, attributeMap, addAuthorities(credential));
+		return new WaterAuthUser(userID, username, email, addAuthorities(credential));
 	}
 	
 	//Generate authorities based on saml assertions

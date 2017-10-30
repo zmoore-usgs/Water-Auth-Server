@@ -1,26 +1,25 @@
 package gov.usgs.wma.mlrauthserver.model;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @SuppressWarnings("serial")
 public class WaterAuthUser implements UserDetails {
+	public static final String USERNAME_JWT_KEY = "saml_username";
+	public static final String EMAIL_JWT_KEY = "saml_email";
+	public static final String USER_ID_JWT_KEY = "saml_user_id";
 	private String username;
 	private String email;
 	private String userId;
-	private List<GrantedAuthority> grantedAuthorities;
-	private Map<String, List<String>> rawAttributes;
+	private List<? extends GrantedAuthority> grantedAuthorities;
 	
-	public WaterAuthUser(String userId, String username, String email, Map<String, List<String>> rawAttributes, List<GrantedAuthority> grantedAuthorities) {
+	public WaterAuthUser(String userId, String username, String email, List<? extends GrantedAuthority> grantedAuthorities) {
 		super();
 		this.userId = userId;
 		this.username = username;
 		this.email = email;
-		this.rawAttributes = rawAttributes;
 		this.grantedAuthorities = grantedAuthorities;
 	}
 	
@@ -65,9 +64,5 @@ public class WaterAuthUser implements UserDetails {
 
 	public String getEmail() {
 		return email;
-	}
-	
-	public Map<String, List<String>> getRawAttributes() {
-		return rawAttributes;
 	}
 }
