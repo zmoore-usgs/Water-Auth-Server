@@ -29,15 +29,14 @@ public class SAMLUserDetailsImpl implements SAMLUserDetailsService  {
 	
 	@Override
 	public Object loadUserBySAML(SAMLCredential credential) throws UsernameNotFoundException {
-		String userID = credential.getNameID().getValue();
 		Map<String, List<String>> attributeMap = SAMLUtils.getAttributeValueMap(credential);
 		
 		String email = attributeMap.get(samlEmailAttributeName).get(0);
 		String username = attributeMap.get(samlUsernameAttributeName).get(0);
 				
-		LOG.info(userID + " logged in.");
+		LOG.info(username + " (" + email + ") logged in.");
 						
-		return new WaterAuthUser(userID, username, email, addAuthorities(credential));
+		return new WaterAuthUser( username, email, addAuthorities(credential));
 	}
 	
 	//Generate authorities based on saml assertions

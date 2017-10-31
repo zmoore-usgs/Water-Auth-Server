@@ -9,12 +9,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class WaterAuthUser implements UserDetails {
 	private String username;
 	private String email;
-	private String userId;
 	private List<? extends GrantedAuthority> grantedAuthorities;
 	
-	public WaterAuthUser(String userId, String username, String email, List<? extends GrantedAuthority> grantedAuthorities) {
+	public WaterAuthUser(String username, String email, List<? extends GrantedAuthority> grantedAuthorities) {
 		super();
-		this.userId = userId;
 		this.username = username;
 		this.email = email;
 		this.grantedAuthorities = grantedAuthorities;
@@ -53,10 +51,6 @@ public class WaterAuthUser implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return true;
-	}
-	
-	public String getUserId() {
-		return userId;
 	}
 
 	public String getEmail() {
