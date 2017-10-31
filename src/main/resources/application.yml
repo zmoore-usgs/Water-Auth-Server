@@ -17,6 +17,7 @@ loginErrorTargetUrl: /auth-error
 logoutSuccessTargetUrl: /out
 dbDriverClassName: com.mysql.jdbc.Driver
 dbSchemaType: mysql
+dbInitializerEnabled: true
 
 server:
     port: ${serverPort:8443}
