@@ -13,8 +13,10 @@ keystoreDefaultKey: default
 keystoreTokenSigningKey: oauth
 keystorePassword: changeit
 loginSuccessTargetUrl: /
-loginErrorTargetUrl: /auth-fail
-logoutSuccessTargetUrl: /
+loginErrorTargetUrl: /auth-error
+logoutSuccessTargetUrl: /out
+dbDriverClassName: com.mysql.jdbc.Driver
+dbSchemaType: mysql
 
 server:
     port: ${serverPort:8443}
@@ -23,9 +25,7 @@ server:
         key-store-password: ${keystorePassword}
         key-password: ${keystorePassword} 
         
-spring:
- session:
-   store-type: jdbc
-   timeout: 43200 #12 hours
-   jdbc:
-     table-name: SPRING_SESSION
+logging:
+  level:
+    org:
+      springframework: DEBUG

@@ -12,4 +12,16 @@ public class HomeController {
 	public String loggedIn() {
 		return "You're logged in as " + SecurityContextHolder.getContext().getAuthentication().getName();
 	}
+	
+	@RequestMapping("/out")
+	@ResponseBody
+	public String loggedOut() {
+		return "You have been logged out.";
+	}
+	
+	@RequestMapping("/auth-error")
+	@ResponseBody
+	public String error() {
+		return "An error occurred while attempting to login or logout. Please go back and try again.";
+	}
 }
