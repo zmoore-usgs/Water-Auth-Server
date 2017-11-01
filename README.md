@@ -3,6 +3,16 @@
 ### Specifying Environment Variable Values
 The application.yml file in `src/main/resources` should be copied to the project root directory and then the values can be modified to fit your local configuration.
 
+### Running on the proper context
+When running this application locally or on the same host URL as other services it must be mounted on a context other than just `/`. This is required because cookies are port-agnostic and thus if multiple services are running on the same host, with different ports, but still mounted on `/` then the cookies will that are created will overwrite eachother and auth will not function properly. 
+
+By default the service runs on `/` but this can be changed by adding the following to your application.yml and replacing MY_CONTEXT with the value of your choice.
+
+```
+server:
+    contextPath: /MY_CONTEXT
+```
+
 ### Creating a Keystore
 As further disucssed in the `Keystore` section below this application uses a keystore and several different keys for various parts of its operation. In order to run this application locally a keystore will need to be provided. This keystore should contain 3 keys:
 - A key for the embedded tomcat server to serve over https
@@ -11,7 +21,7 @@ As further disucssed in the `Keystore` section below this application uses a key
 - A key for signing requests made to the SAML server
     - Defined in environment variable: `keystoreSAMLKey`
 - A key for signing Oauth2 tokens to be cerated and passed to client services
-    - Defined in environment variable: `keystoreTokenSigningKey`
+    - Defined in environment variable: `keystoreOAuthKey`
 
     Note that the second and third keys are not necessary when using the `localDev` profile discussed below.
 
@@ -93,16 +103,19 @@ A keystore is used by the SAML service to ensure secure communication with the I
 
 - **keystoreSSLKey** - The key to serve from the service when SSL is enabled.
 
-- **keystoreTokenSigningKey** - The key alias to use for singing Oauth2 tokens. Note that this key alias **must** be different from the default key alias when running this application in Docker using the provided Dockerfile.
+- **keystoreOAuthKey** - The key alias to use for singing Oauth2 tokens. Note that this key alias **must** be different from the default key alias when running this application in Docker using the provided Dockerfile.
 
 ### SAML Login/Logout URL Routing
-The login success and error as well as logout success URLs can be customized. These are the URLs that the client will be redirected to upon logging in or out, based on the status of that action.
+The default login success and error URLs as well as the logout success URLs can be customized. These are the URLs that the client will be redirected to upon logging in or out if there is no redirect URL provided. In the case of an OAuth2 request a redirect URL will be provided to redirect the user back to the client application and these URLs will not be used.
 
-- **loginSuccessTargetUrl** - The URL to redirect the client to upon a successful login.
+- **loginSuccessTargetUrl** - The default URL to redirect the user to upon a successful login.
+    - Default value: `/`
 
-- **loginErrorTargetUrl** - The URL to redirect the client to upon a failed login.
+- **loginErrorTargetUrl** - The default URL to redirect the user to upon a failed login.
+    - Default value: `/auth-error`
 
-- **logoutSuccessTargetUrl** - The URL to redirect the client to upon logging out.
+- **logoutSuccessTargetUrl** - The default URL to redirect the user to upon logging out.
+    - Default value: `/out`
 
 ### SAML Access URL Overrides
 The URLs that the application maps to various SAML action endpoints can be customized if desired, though all of these variables have default values. All values in this section should being with a forward slash ( / ) and end **without** a trailing slash.

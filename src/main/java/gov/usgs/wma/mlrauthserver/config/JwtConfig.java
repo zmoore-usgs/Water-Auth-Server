@@ -21,8 +21,8 @@ public class JwtConfig {
 
 	@Value("${keystoreLocation}")
 	private String keystorePath;
-	@Value("${keystoreTokenSigningKey}")
-	private String keystoreTokenSigningKey;
+	@Value("${keystoreOAuthKey}")
+	private String keystoreOAuthKey;
 	@Value("${keystorePassword}")
 	private String keystorePassword;
 
@@ -47,7 +47,7 @@ public class JwtConfig {
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 		KeyStoreKeyFactory keyStoreKeyFactory =
 				new KeyStoreKeyFactory(storeFile,this.keystorePassword.toCharArray());
-		converter.setKeyPair(keyStoreKeyFactory.getKeyPair(this.keystoreTokenSigningKey));
+		converter.setKeyPair(keyStoreKeyFactory.getKeyPair(this.keystoreOAuthKey));
 		
 		return converter;
 	}
