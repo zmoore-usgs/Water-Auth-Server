@@ -1,0 +1,37 @@
+# Changelog
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
+and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html). (Patch version X.Y.0 is implied if not specified.)
+
+## [Unreleased]
+
+### Add
+- Spring Security SAML Authentication configured to properly work with DOI SAML.
+    - Authentication Endpoints: `/saml/login`, `/saml/logout/`, `/saml/gloabllogout/`, `/saml/metadata/`
+
+- Spring Security OAuth2 Authorization with Spring Security JWT Token Generation
+    - Authorization Endpoints: `/oauth/token`, `/oauth/authorize`, `/oauth/token_key`
+
+- Sessions can be optionally persisted in a JDBC database in order to allow horizontal scaling.
+
+- OAuth2 Clients are persisted in a JDBC database in order to allow for horizontal scaling and on-demand client modifications, removals, and additions.
+
+- Internal and toggleable MySQL initialization scripts that can create the Session and OAuth2 Client tables in the connected MySQL database if they do not already exist.
+
+- Toggleable Spring Profiles to siwtch between local development and server deployment. The local development profile disables the need for SAML and a database for storing sessions and OAuth2 clients.
+
+- Simplistic default pages for various default authentication redirect endpoints. These deafult endpoints are only used when no other redirect URLs are provided (such as by an OAuth2 request).
+    - Default Endpoints: `/` (Login Success), `/out` (Logout Success), `/auth-error` (Error during Authentication Process)
+
+- Configurable mapping of key values from the SAML Response to the generated OAuth2 JWT Token
+    - OAuth2 Authroizations: Maps SAML Assertion values with the key `$samlGroupAttributeName` to the `authorizations` list of the OAuth2 token.
+    - Principal name: Maps the SAML Assertion value with the key `$samlUsernameAttributeName` to the principal name of the Spring Security context and the `user_name` field of the JWT token.
+    - User Email: Maps the SAML Assertion value with the key `$samlEmailAttributeName` to the `email` field of the JWT token and an `email` extension within the OAuth2 Spring Security context.
+
+- Docker support for passing in cert and key files as Docker Secrets and using those to populate the keystore used by the applicaiton.
+
+
+
+[Unreleased]: https://github.com/USGS-CIDA/Water-Auth-Server/tree/master
+ 
