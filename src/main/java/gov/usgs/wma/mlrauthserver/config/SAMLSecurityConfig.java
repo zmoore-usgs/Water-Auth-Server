@@ -99,8 +99,8 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	//Keystore Configuration
 	@Value("${keystoreLocation}")
 	private String keystorePath;
-	@Value("${keystoreDefaultKey}")
-	private String keystoreDefaultKey;
+	@Value("${keystoreSAMLKey}")
+	private String keystoreSAMLKey;
 	@Value("${keystorePassword}")
 	private String keystorePassword;
 	
@@ -267,9 +267,9 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 		}
 		
 		Map<String, String> passwords = new HashMap<>();
-		passwords.put(this.keystoreDefaultKey,this.keystorePassword );
+		passwords.put(this.keystoreSAMLKey,this.keystorePassword);
 		
-		return new JKSKeyManager(storeFile, this.keystorePassword, passwords, this.keystoreDefaultKey);
+		return new JKSKeyManager(storeFile, this.keystorePassword, passwords, this.keystoreSAMLKey);
 	}
 
 	@Bean

@@ -3,6 +3,41 @@
 ### Specifying Environment Variable Values
 The application.yml file in `src/main/resources` should be copied to the project root directory and then the values can be modified to fit your local configuration.
 
+### Creating a Keystore
+As further disucssed in the `Keystore` section below this application uses a keystore and several different keys for various parts of its operation. In order to run this application locally a keystore will need to be provided. This keystore should contain 3 keys:
+- A key for the embedded tomcat server to serve over https
+    - Defined in environment variable: `keystoreSSLKey` 
+        - Default value is: `tomcat`
+- A key for signing requests made to the SAML server
+    - Defined in environment variable: `keystoreSAMLKey`
+- A key for signing Oauth2 tokens to be cerated and passed to client services
+    - Defined in environment variable: `keystoreTokenSigningKey`
+
+    Note that the second and third keys are not necessary when using the `localDev` profile discussed below.
+
+    Also note that when creating the SSL Key you **must** set the `CN` attribute of the key to be equal to the domain that the service will be running on. When creating this key to be run locally the `CN` should be `localhost`. This is discussed further below.
+
+Using the Java program `keytool` a keystore can be created and keys can be added to it using the following command where MY_ALIAS and MY_KEYSTORE are replaced with values of your choice:
+
+```
+keytool -genkey -keyalg RSA -alias MY_ALIAS -keystore MY_KEYSTORE.jks 
+```
+
+Running this command will bring up an interactive wizard to create your keystore (if it doesn't exist already) and the associated key.
+
+When creating the key several prompts will come up asking for various pieces of information. The first prompt asking for your first and last name is actually the prompt for the `CN` value of the key and this is where you should enter the host that the service will be running on (Likely `localhost` or a docker IP for local development) when you are creating the SSL key. The additional prompt values can be left as blank and the first prompt can be left blank on all keys except for the SSL key.
+
+The final step  of the wizard will ask if the key should have a password. This should be left blank so that the key will use the same password sa the keystore itself.
+
+When running a client application that needs to access a locally running version of the Gateway this same keystore can be used in that client. Alternatively you could also create a new keystore and then visit the water auth server homepage in your browser, export the served certificate, and import that into your new keystore. This new keystore could then be used for the client application.
+
+To specify the store that your client application should use (if that cleint is a Java Spring project) include the following command line arguemnts in your java call to launch the client application:
+
+```
+-Djavax.net.ssl.trustStore=<full path to your keystore>
+-Djavax.net.ssl.trustStorePassword=<password for your keystore>
+```
+
 ### localDev Profile
 This application has two built-in Spring Profiles to aid with local development. 
 
@@ -11,15 +46,11 @@ The default profile, which is run when either no profile is provided or the prof
 The localDev profile, which is run when the profile name "localDev" is provided, is setup to require no external dependies - Sessions are stored internally, SAML Authentication is disabled, and a default client (client-id: "nwis") is configured within the application.
 
 ## Spring Security Client and Session Storage
-This service by default stores session data within a database rather than within the applicaiton itself. This allows for multiple running instances of this service to share session information, thereby making the service stateless. Similarly, this service by default also stores Spring Security Ouath2 client information within a database rather than within the application itself. 
+This service by default stores session data within a database rather than within the application itself. This allows for multiple running instances of this service to share session information, thereby making the service stateless. Similarly, this service by default also stores Spring Security Ouath2 client information within a database rather than within the application itself. 
 
-When the application first starts it attempts to connect to the configured database and run a set of initialization scripts to create the relevant tables if they don't already exist
+When the application first starts it attempts to connect to the configured MySQL database and run a set of initialization scripts to create the relevant tables if they don't already exist
 
 The related environment variables are listed below:
-
-- **dbDriverClassName** - The driver class to use when connecting to the configured database. The default driver is MySQL using the com.mysql.jdbc.Driver class. In order to use other drivers their JAR dependencies would need to be included with or injected into the application JAR. 
-
-- **dbSchemaType** - The type of database that the service will connect to. This informs the initializer as to which initialization script to use. The default value is mysql.
 
 - **dbConnectionUrl** - The full JDBC-qualified database URL that the application should connect to. Example: jdbc:mysql://192.168.99.100/mydb
 
@@ -56,9 +87,11 @@ A keystore is used by the SAML service to ensure secure communication with the I
 
 - **keystoreLocation** - The file path to the keystore to be used for saml. The file can be loaded from the classpath by prepending "classpath:" to the start of the file path.
 
-- **keystoreDefaultKey** - The default key of the keystore.
-
 - **keystorePassword** - The password used to access the keystore.
+
+- **keystoreSAMLKey** - The key to use for signing requests made to the SAML server.
+
+- **keystoreSSLKey** - The key to serve from the service when SSL is enabled.
 
 - **keystoreTokenSigningKey** - The key alias to use for singing Oauth2 tokens. Note that this key alias **must** be different from the default key alias when running this application in Docker using the provided Dockerfile.
 
