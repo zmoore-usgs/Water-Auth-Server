@@ -99,8 +99,8 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	//Keystore Configuration
 	@Value("${keystoreLocation}")
 	private String keystorePath;
-	@Value("${keystoreDefaultKey}")
-	private String keystoreDefaultKey;
+	@Value("${keystoreSAMLKey}")
+	private String keystoreSAMLKey;
 	@Value("${keystorePassword}")
 	private String keystorePassword;
 	
@@ -266,10 +266,10 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 			storeFile = loader.getResource(this.keystorePath);
 		}
 		
-		Map<String, String> passwords = new HashMap<String, String>();
-		passwords.put(this.keystoreDefaultKey,this.keystorePassword );
+		Map<String, String> passwords = new HashMap<>();
+		passwords.put(this.keystoreSAMLKey,this.keystorePassword);
 		
-		return new JKSKeyManager(storeFile, this.keystorePassword, passwords, this.keystoreDefaultKey);
+		return new JKSKeyManager(storeFile, this.keystorePassword, passwords, this.keystoreSAMLKey);
 	}
 
 	@Bean
@@ -478,7 +478,7 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public SAMLProcessorImpl processor() {
-		Collection<SAMLBinding> bindings = new ArrayList<SAMLBinding>();
+		Collection<SAMLBinding> bindings = new ArrayList<>();
 		bindings.add(httpRedirectDeflateBinding());
 		bindings.add(httpPostBinding());
 		bindings.add(httpSOAP11Binding());
@@ -488,7 +488,7 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Bean
 	public FilterChainProxy samlFilter() throws Exception {
-		List<SecurityFilterChain> chains = new ArrayList<SecurityFilterChain>();
+		List<SecurityFilterChain> chains = new ArrayList<>();
 		chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.samlBaseEndpoint + this.samlLoginEndpoint + "/**"),
 				samlEntryPoint()));
 		chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(this.samlBaseEndpoint + this.samlLogoutEndpoint + "/**"),
@@ -523,11 +523,11 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 			.addFilterAfter(samlFilter(), BasicAuthenticationFilter.class);
 		http        
 			.authorizeRequests()
-			.antMatchers(this.samlBaseEndpoint + "/**").permitAll()
+			.antMatchers(this.samlBaseEndpoint + "/**/").permitAll()
 			.antMatchers(this.logoutSuccessTargetUrl).permitAll()
 			.antMatchers(this.loginErrorTargetUrl).permitAll()
-			.antMatchers("/login").permitAll()
-			.antMatchers("/oauth/authorize").permitAll()
+			.antMatchers("/login/").permitAll()
+			.antMatchers("/oauth/authorize/").permitAll()
 			.anyRequest().authenticated();
 		http
 			.logout()

@@ -1,21 +1,25 @@
 security:
   basic:
     enabled: false
+  require-ssl: true
 
-samlIdpMetadataLocation: classpath:/metadata/metadata.xml
-samlAuthnRequestEntityId: entityId
-samlAuthnRequestProviderName: providerName
-keystoreLocation: classpath:/security/keystore.jks
-keystoreDefaultKey: default
-keystoreTokenSigningKey: oauth
-keystorePassword: changeit
-loginSuccessTargetUrl: /home
-loginErrorTargetUrl: /auth-fail
-logoutSuccessTargetUrl: /
+samlGroupAttributeName: http://schemas.xmlsoap.org/claims/Group
+samlEmailAttributeName: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress
+samlUsernameAttributeName: http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname
+loginSuccessTargetUrl: /
+loginErrorTargetUrl: /auth-error
+logoutSuccessTargetUrl: /out
+dbInitializerEnabled: true
 
 server:
     port: ${serverPort:8443}
     ssl:
         key-store: ${keystoreLocation}
         key-store-password: ${keystorePassword}
-        key-password: ${keystorePassword} 
+        key-password: ${keystorePassword}
+        key-alias: ${keystoreSSLKey:tomcat}
+        
+logging:
+  level:
+    org:
+      springframework: DEBUG
