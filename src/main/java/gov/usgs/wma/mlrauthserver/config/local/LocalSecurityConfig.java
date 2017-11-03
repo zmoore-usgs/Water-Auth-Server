@@ -17,6 +17,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
+			.anonymous().disable()
 			.requestMatchers().antMatchers("/login", "/oauth/authorize")
 			.and()
 				.authorizeRequests().anyRequest().authenticated()

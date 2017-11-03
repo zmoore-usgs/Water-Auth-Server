@@ -1,6 +1,8 @@
 package gov.usgs.wma.mlrauthserver.config;
 
 import java.util.Arrays;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +28,9 @@ public class JwtConfig {
 	@Value("${keystorePassword}")
 	private String keystorePassword;
 
+	@Autowired
+	TokenEnhancer tokenEnhancer;
+
 	@Bean
 	public TokenStore tokenStore() {
 		return new JwtTokenStore(accessTokenConverter());
@@ -34,7 +39,7 @@ public class JwtConfig {
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		Resource storeFile;
-		
+
 		if(this.keystorePath.toLowerCase().startsWith("classpath:")){
 			DefaultResourceLoader loader = new DefaultResourceLoader();
 			String classpathLocation = this.keystorePath.replaceFirst("classpath:", "");
@@ -43,7 +48,7 @@ public class JwtConfig {
 			FileSystemResourceLoader loader = new FileSystemResourceLoader();
 			storeFile = loader.getResource(this.keystorePath);
 		}
-		
+
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 		KeyStoreKeyFactory keyStoreKeyFactory =
 				new KeyStoreKeyFactory(storeFile,this.keystorePassword.toCharArray());
@@ -59,14 +64,9 @@ public class JwtConfig {
 		defaultTokenServices.setTokenStore(tokenStore());
 		defaultTokenServices.setSupportRefreshToken(true);
 		TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-		tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
+		tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer, accessTokenConverter()));
 		defaultTokenServices.setTokenEnhancer(tokenEnhancerChain);
-		
+
 		return defaultTokenServices;
-	}
-	
-	@Bean
-	public TokenEnhancer tokenEnhancer() {
-		return new WaterAuthJwtEnhancer();
 	}
 }
