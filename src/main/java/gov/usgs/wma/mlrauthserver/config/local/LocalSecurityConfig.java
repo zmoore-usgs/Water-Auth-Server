@@ -18,9 +18,8 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.anonymous().disable()
-			.requestMatchers().antMatchers("/login", "/oauth/authorize")
-			.and()
-				.authorizeRequests().anyRequest().authenticated()
+			.authorizeRequests()
+				.anyRequest().fullyAuthenticated()
 			.and()
 				.formLogin().permitAll()
 			;
