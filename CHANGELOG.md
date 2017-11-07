@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-### Add
+### Added
 - Spring Security SAML Authentication configured to properly work with DOI SAML.
     - Authentication Endpoints: `/saml/login`, `/saml/logout/`, `/saml/gloabllogout/`, `/saml/metadata/`
 
@@ -29,7 +29,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
     - Principal name: Maps the SAML Assertion value with the key `$samlUsernameAttributeName` to the principal name of the Spring Security context and the `user_name` field of the JWT token.
     - User Email: Maps the SAML Assertion value with the key `$samlEmailAttributeName` to the `email` field of the JWT token and an `email` extension within the OAuth2 Spring Security context.
 
-- Docker support for passing in cert and key files as Docker Secrets and using those to populate the keystore used by the applicaiton.
+- Docker support for passing in cert and key files as Docker Secrets and using those to populate the keystore used by the application.
+
+- Global exception handler for Http requests
 
 
 
