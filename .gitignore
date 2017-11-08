@@ -4,6 +4,6 @@
 /.settings/
 **/*.jks
 **/metadata/*.xml
-*.yml
 **/*.p12
 **/*.crt
+/application.yml
