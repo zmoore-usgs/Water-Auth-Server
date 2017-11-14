@@ -423,7 +423,7 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public MetadataGenerator metadataGenerator() {
 		MetadataGenerator metadataGenerator = new MetadataGenerator();
-		metadataGenerator.setEntityId(entityId);		
+		metadataGenerator.setEntityId(entityId);
 		metadataGenerator.setExtendedMetadata(extendedMetadata());
 		metadataGenerator.setIncludeDiscoveryExtension(false);
 		metadataGenerator.setKeyManager(keyManager()); 
