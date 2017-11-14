@@ -91,6 +91,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import gov.usgs.wma.mlrauthserver.service.SAMLUserDetailsImpl;
+import org.springframework.security.saml.context.SAMLContextProviderLB;
 
 @Configuration
 @EnableWebSecurity
@@ -103,6 +104,18 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	private String keystoreSAMLKey;
 	@Value("${keystorePassword}")
 	private String keystorePassword;
+	
+	//Server URL Configuration
+	@Value("${waterAuthUrlScheme:https}")
+	private String waterAuthUrlScheme;
+	@Value("${waterAuthUrlServerPort:443}")
+	private int waterAuthUrlServerPort;
+	@Value("${waterAuthUrlIncludePort:false}")
+	private boolean waterAuthUrlIncludePort;
+	@Value("${waterAuthUrlServerName:}")
+	private String waterAuthUrlServerName;
+	@Value("${waterAuthUrlContextPath:/}")
+	private String waterAuthUrlContextPath;
 	
 	//SAML IDP Configuration
 	@Value("${samlIdpMetadataLocation}")
@@ -207,7 +220,18 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public SAMLContextProviderImpl contextProvider() {
-		return new SAMLContextProviderImpl();
+		if(waterAuthUrlServerName != null && waterAuthUrlServerName.length() > 0)
+		{
+			SAMLContextProviderLB context = new SAMLContextProviderLB();
+			context.setScheme(waterAuthUrlScheme);
+			context.setServerName(waterAuthUrlServerName);
+			context.setIncludeServerPortInRequestURL(waterAuthUrlIncludePort);
+			context.setServerPort(waterAuthUrlServerPort);
+			context.setContextPath(waterAuthUrlContextPath);
+			return context;
+		} else {
+			return new SAMLContextProviderImpl();
+		}
 	}
 
 	@Bean
@@ -399,11 +423,17 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public MetadataGenerator metadataGenerator() {
 		MetadataGenerator metadataGenerator = new MetadataGenerator();
-		metadataGenerator.setEntityId(entityId);
+		metadataGenerator.setEntityId(entityId);		
 		metadataGenerator.setExtendedMetadata(extendedMetadata());
 		metadataGenerator.setIncludeDiscoveryExtension(false);
 		metadataGenerator.setKeyManager(keyManager()); 
 		metadataGenerator.setRequestSigned(false);
+		
+		if(waterAuthUrlServerName != null && waterAuthUrlServerName.length() > 0) {
+			String baseUrl = waterAuthUrlScheme + "://" + waterAuthUrlServerName +
+					(waterAuthUrlIncludePort ? ":" + waterAuthUrlServerPort : "" ) + waterAuthUrlContextPath;
+			metadataGenerator.setEntityBaseURL(baseUrl);
+		}
 		return metadataGenerator;
 	}
 
