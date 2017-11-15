@@ -434,7 +434,8 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 		
 		if(waterAuthUrlServerName != null && waterAuthUrlServerName.length() > 0) {
 			String baseUrl = waterAuthUrlScheme + "://" + waterAuthUrlServerName +
-					(waterAuthUrlIncludePort ? ":" + waterAuthUrlServerPort : "" ) + waterAuthUrlContextPath;
+					(waterAuthUrlIncludePort ? ":" + waterAuthUrlServerPort : "" ) + 
+					(waterAuthUrlContextPath.length() > 1 ? waterAuthUrlContextPath : "");
 			metadataGenerator.setEntityBaseURL(baseUrl);
 		}
 		return metadataGenerator;
