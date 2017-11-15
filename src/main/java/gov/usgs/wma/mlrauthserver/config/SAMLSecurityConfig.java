@@ -91,6 +91,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import gov.usgs.wma.mlrauthserver.service.SAMLUserDetailsImpl;
+import org.springframework.security.saml.context.SAMLContextProviderLB;
 
 @Configuration
 @EnableWebSecurity
@@ -103,6 +104,19 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	private String keystoreSAMLKey;
 	@Value("${keystorePassword}")
 	private String keystorePassword;
+	
+	//Server URL Configuration
+	private boolean waterAuthUrlIncludePort;
+	private String waterAuthUrlScheme;
+	
+	@Value("${security.require-ssl:false}")
+	private boolean waterAuthUrlSSL;
+	@Value("${server.port:8080}")
+	private int waterAuthUrlServerPort;
+	@Value("${waterAuthUrlServerName:}")
+	private String waterAuthUrlServerName;
+	@Value("${server.contextPath:/}")
+	private String waterAuthUrlContextPath;
 	
 	//SAML IDP Configuration
 	@Value("${samlIdpMetadataLocation}")
@@ -141,6 +155,8 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@PostConstruct
 	public void init() {
+		this.waterAuthUrlIncludePort = (waterAuthUrlServerPort != 80 && waterAuthUrlServerPort != 443);
+		this.waterAuthUrlScheme = waterAuthUrlSSL ? "https" : "http";
 		this.metadataTimer = new Timer(true);
 		this.multiThreadedHttpConnectionManager = new MultiThreadedHttpConnectionManager();
 	}
@@ -207,7 +223,18 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public SAMLContextProviderImpl contextProvider() {
-		return new SAMLContextProviderImpl();
+		if(waterAuthUrlServerName != null && waterAuthUrlServerName.length() > 0)
+		{
+			SAMLContextProviderLB context = new SAMLContextProviderLB();
+			context.setServerName(waterAuthUrlServerName);
+			context.setServerPort(waterAuthUrlServerPort);
+			context.setContextPath(waterAuthUrlContextPath);
+			context.setScheme(waterAuthUrlScheme);
+			context.setIncludeServerPortInRequestURL(waterAuthUrlIncludePort);
+			return context;
+		} else {
+			return new SAMLContextProviderImpl();
+		}
 	}
 
 	@Bean
@@ -404,6 +431,12 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 		metadataGenerator.setIncludeDiscoveryExtension(false);
 		metadataGenerator.setKeyManager(keyManager()); 
 		metadataGenerator.setRequestSigned(false);
+		
+		if(waterAuthUrlServerName != null && waterAuthUrlServerName.length() > 0) {
+			String baseUrl = waterAuthUrlScheme + "://" + waterAuthUrlServerName +
+					(waterAuthUrlIncludePort ? ":" + waterAuthUrlServerPort : "" ) + waterAuthUrlContextPath;
+			metadataGenerator.setEntityBaseURL(baseUrl);
+		}
 		return metadataGenerator;
 	}
 

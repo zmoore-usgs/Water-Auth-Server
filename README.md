@@ -105,6 +105,21 @@ A keystore is used by the SAML service to ensure secure communication with the I
 
 - **keystoreOAuthKey** - The key alias to use for singing Oauth2 tokens. Note that this key alias **must** be different from the default key alias when running this application in Docker using the provided Dockerfile.
 
+### SAML IDP Metadata DNS Mapping
+By default the Spring Security SAML service determines its current deployment URL and sends that in the metadata as the URL that the SAML server should expect requests to originate from. However when the service is deployed behind a reverse proxy or a load balancer the internal URL is not the one that should be sent in the metadata as there may be several different internal URLs sending requests. The following environment variables allow you to provide the WaterAuthServer with information about the URL that it will be accessed from, which will allow it to generate proper metadata URLs. When not running behind any sort of load balancer, reverse proxy, or other DNS mapping this is not necessary to include. 
+
+If you want these overrides to be used in place of the automatic behavior then `waterAuthUrlServerName` **MUST** be specified.
+
+- **waterAuthUrlScheme** - [Default: https] The URL connection scheme to use. Valid options are `http` or `https`. Do not include `://` or any additional information.
+
+- **waterAuthUrlServerPort** - [Default: 443] The port that the server will be deployed on.
+
+- **waterAuthUrlIncludePort** - [Default: false] Wheter or not the port number is included in the URL when connecting to the WaterAuthServer. I.E: If the service is deployed on port `8443` instead of `443` then the port should be included because hte URL would need to be something similar to: `https://localhost:8443/`
+
+- **waterAuthUrlServerName** - The host name that the WaterAuthServer is deployed onto. For example `localhost` or `auth.testing.com`.
+
+- **waterAuthUrlContextPath** - [Default: /] The context path that the WaterAuthServer is deployed onto at the server. This should invlude a leading forward slash. For example `/auth` or just `/` for the root context.
+
 ### SAML Login/Logout URL Routing
 The default login success and error URLs as well as the logout success URLs can be customized. These are the URLs that the client will be redirected to upon logging in or out if there is no redirect URL provided. In the case of an OAuth2 request a redirect URL will be provided to redirect the user back to the client application and these URLs will not be used.
 
