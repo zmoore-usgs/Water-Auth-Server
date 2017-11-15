@@ -111,11 +111,11 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Value("${security.require-ssl:false}")
 	private boolean waterAuthUrlSSL;
-	@Value("${server.port:8080}")
+	@Value("${waterAuthUrlServerPort:443}")
 	private int waterAuthUrlServerPort;
 	@Value("${waterAuthUrlServerName:}")
 	private String waterAuthUrlServerName;
-	@Value("${server.contextPath:/}")
+	@Value("${waterAuthUrlContextPath:/}")
 	private String waterAuthUrlContextPath;
 	
 	//SAML IDP Configuration
