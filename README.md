@@ -108,7 +108,17 @@ A keystore is used by the SAML service to ensure secure communication with the I
 ### SAML IDP Metadata DNS Mapping
 By default the Spring Security SAML service determines its current deployment URL and sends that in the metadata as the URL that the SAML server should expect requests to originate from. However when the service is deployed behind a reverse proxy or a load balancer the internal URL is not the one that should be sent in the metadata as there may be several different internal URLs sending requests. The following environment variables allow you to provide the WaterAuthServer with information about the URL that it will be accessed from, which will allow it to generate proper metadata URLs. When not running behind any sort of load balancer, reverse proxy, or other DNS mapping this is not necessary to include. 
 
+If you want these overrides to be used in place of the automatic behavior then `waterAuthUrlServerName` **MUST** be specified.
+
+NOTE: The values for the variables below should not encessarily be equal to the values of other configuration variables (i.e: server.port does not necessarily equal waterAuthUrlServerPort). 
+
+For example, when deploying the application through a Docker container it may be deployed on port `8443` but have that port mapped to and exposed externally as just port `443`. In this case `server.port` would be equal to `8443` but `waterAuthUrlServerPort` should be equal to `443` because this is the port that external connections will hit.
+
+- **waterAuthUrlServerPort** - [Default: 443] The port that the server will be deployed on.
+
 - **waterAuthUrlServerName** - The host name that the WaterAuthServer is deployed onto. For example `localhost` or `auth.testing.com`.
+
+- **waterAuthUrlContextPath** - [Default: /] The context path that the WaterAuthServer is deployed onto at the server. This should invlude a leading forward slash. For example `/auth` or just `/` for the root context.
 
 ### SAML Login/Logout URL Routing
 The default login success and error URLs as well as the logout success URLs can be customized. These are the URLs that the client will be redirected to upon logging in or out if there is no redirect URL provided. In the case of an OAuth2 request a redirect URL will be provided to redirect the user back to the client application and these URLs will not be used.
