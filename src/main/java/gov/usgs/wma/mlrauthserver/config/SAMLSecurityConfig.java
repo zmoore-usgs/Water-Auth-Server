@@ -106,15 +106,16 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	private String keystorePassword;
 	
 	//Server URL Configuration
-	@Value("${waterAuthUrlScheme:https}")
-	private String waterAuthUrlScheme;
-	@Value("${waterAuthUrlServerPort:443}")
-	private int waterAuthUrlServerPort;
-	@Value("${waterAuthUrlIncludePort:false}")
 	private boolean waterAuthUrlIncludePort;
+	private String waterAuthUrlScheme;
+	
+	@Value("${security.require-ssl:false}")
+	private boolean waterAuthUrlSSL;
+	@Value("${server.port:8080}")
+	private int waterAuthUrlServerPort;
 	@Value("${waterAuthUrlServerName:}")
 	private String waterAuthUrlServerName;
-	@Value("${waterAuthUrlContextPath:/}")
+	@Value("${server.contextPath:/}")
 	private String waterAuthUrlContextPath;
 	
 	//SAML IDP Configuration
@@ -154,6 +155,8 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@PostConstruct
 	public void init() {
+		this.waterAuthUrlIncludePort = (waterAuthUrlServerPort != 80 && waterAuthUrlServerPort != 443);
+		this.waterAuthUrlScheme = waterAuthUrlSSL ? "https" : "http";
 		this.metadataTimer = new Timer(true);
 		this.multiThreadedHttpConnectionManager = new MultiThreadedHttpConnectionManager();
 	}
@@ -223,11 +226,11 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 		if(waterAuthUrlServerName != null && waterAuthUrlServerName.length() > 0)
 		{
 			SAMLContextProviderLB context = new SAMLContextProviderLB();
-			context.setScheme(waterAuthUrlScheme);
 			context.setServerName(waterAuthUrlServerName);
-			context.setIncludeServerPortInRequestURL(waterAuthUrlIncludePort);
 			context.setServerPort(waterAuthUrlServerPort);
 			context.setContextPath(waterAuthUrlContextPath);
+			context.setScheme(waterAuthUrlScheme);
+			context.setIncludeServerPortInRequestURL(waterAuthUrlIncludePort);
 			return context;
 		} else {
 			return new SAMLContextProviderImpl();
