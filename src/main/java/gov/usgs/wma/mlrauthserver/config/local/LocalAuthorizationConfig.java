@@ -1,6 +1,7 @@
 package gov.usgs.wma.mlrauthserver.config.local;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,13 +21,23 @@ public class LocalAuthorizationConfig extends AuthorizationServerConfigurerAdapt
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
-
 	@Autowired
 	private TokenStore tokenStore;
 	@Autowired
 	private JwtAccessTokenConverter accessTokenConverter;
 	@Autowired
 	private DefaultTokenServices tokenServices;
+
+	@Value("${security.oauth2.client.clientId}")
+	private String localClient;
+	@Value("${security.oauth2.client.clientSecret}")
+	private String localSecret;
+	@Value("${security.oauth2.client.grantTypes}")
+	private String[] localGrantTypes;
+	@Value("${security.oauth2.client.scopes}")
+	private String[] localScopes;
+	@Value("${security.oauth2.resource.id}")
+	private String localResourceId;
 
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
@@ -38,10 +49,11 @@ public class LocalAuthorizationConfig extends AuthorizationServerConfigurerAdapt
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory()
-			.withClient("nwis")
-			.authorizedGrantTypes("authorization_code", "access_token", "refresh_token", "client_credentials", "password")
-			.scopes("user_info")
-			.secret("changeMe")
+			.withClient(localClient)
+			.resourceIds(localResourceId)
+			.authorizedGrantTypes(localGrantTypes)
+			.scopes(localScopes)
+			.secret(localSecret)
 			.autoApprove(true)
 			;
 	}

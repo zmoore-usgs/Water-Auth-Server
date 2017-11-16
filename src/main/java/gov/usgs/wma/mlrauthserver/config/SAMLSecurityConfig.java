@@ -98,58 +98,57 @@ import org.springframework.security.saml.context.SAMLContextProviderLB;
 @Profile("default")
 public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	//Keystore Configuration
-	@Value("${keystoreLocation}")
+	@Value("${security.jwt.key-store}")
 	private String keystorePath;
-	@Value("${keystoreSAMLKey}")
+	@Value("${security.jwt.key-store-saml-key}")
 	private String keystoreSAMLKey;
-	@Value("${keystorePassword}")
+	@Value("${security.jwt.key-store-password}")
 	private String keystorePassword;
-	
+
 	//Server URL Configuration
 	private boolean waterAuthUrlIncludePort;
 	private String waterAuthUrlScheme;
-	
-	@Value("${security.require-ssl:false}")
+	@Value("${security.require-ssl}")
 	private boolean waterAuthUrlSSL;
-	@Value("${waterAuthUrlServerPort:443}")
+	@Value("${server.implementation.port}")
 	private int waterAuthUrlServerPort;
-	@Value("${waterAuthUrlServerName:}")
+	@Value("${server.implementation.server}")
 	private String waterAuthUrlServerName;
-	@Value("${waterAuthUrlContextPath:/}")
+	@Value("${server.implementation.context}")
 	private String waterAuthUrlContextPath;
-	
+
 	//SAML IDP Configuration
-	@Value("${samlIdpMetadataLocation}")
+	@Value("${saml.idp.metadataLocation}")
 	private String metadataLocation;
-	@Value("${samlAuthnRequestProviderName:}")
+	@Value("${saml.idp.provider}")
 	private String providerName;
-	@Value("${samlAuthnRequestEntityId}")
+	@Value("${saml.idp.entity-id}")
 	private String entityId;
-	
+
 	//Local SAML Endpoint Configuration
-	@Value("${samlBaseEndpoint:/saml}")
+	@Value("${saml.endpoint.base}")
 	private String samlBaseEndpoint;
-	@Value("${samlLoginEndpoint:/login}")
+	@Value("${saml.endpoint.login}")
 	private String samlLoginEndpoint;
-	@Value("${samlLogoutEndpoint:/logout}")
+	@Value("${saml.endpoint.logout}")
 	private String samlLogoutEndpoint;
-	@Value("${samlSingleLogoutEndpoint:/singlelogout}")
+	@Value("${saml.endpoint.single.logout}")
 	private String samlSingleLogoutEndpoint;
-	@Value("${samlSSOEndpoint:/sso}")
+	@Value("${saml.endpoint.sso}")
 	private String samlSSOEndpoint;
-	@Value("${samlSSOHOKEndpoint:/ssohok}")
+	@Value("${saml.endpoint.sso-hok}")
 	private String samlSSOHOKEndpoint;
-	@Value("${samlMetadataEndpoint:/metadata}")
+	@Value("${saml.endpoint.metadata}")
 	private String samlMetadataEndpoint;
-	
+
 	//Login/Logout Routing Configuration
-	@Value("${loginSuccessTargetUrl}")
+	@Value("${server.routing.login-success}")
 	private String loginSuccessTargetUrl;
-	@Value("${logoutSuccessTargetUrl}")
+	@Value("${server.routing.logout-success}")
 	private String logoutSuccessTargetUrl;
-	@Value("${loginErrorTargetUrl:/error}")
+	@Value("${server.routing.login-error}")
 	private String loginErrorTargetUrl;
-		
+
 	private Timer metadataTimer;
 	private MultiThreadedHttpConnectionManager multiThreadedHttpConnectionManager;
 
@@ -182,7 +181,7 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	public ParserPoolHolder parserPoolHolder() {
 		return new ParserPoolHolder();
 	}
-	
+
 	@Bean
 	public HTTPSOAP11Binding soapBinding() {
 		return new HTTPSOAP11Binding(parserPool());
@@ -283,7 +282,7 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public KeyManager keyManager() {
 		Resource storeFile;
-		
+
 		if(this.keystorePath.toLowerCase().startsWith("classpath:")){
 			DefaultResourceLoader loader = new DefaultResourceLoader();
 			String classpathLocation = this.keystorePath.replaceFirst("classpath:", "");
@@ -292,10 +291,10 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 			FileSystemResourceLoader loader = new FileSystemResourceLoader();
 			storeFile = loader.getResource(this.keystorePath);
 		}
-		
+
 		Map<String, String> passwords = new HashMap<>();
 		passwords.put(this.keystoreSAMLKey,this.keystorePassword);
-		
+
 		return new JKSKeyManager(storeFile, this.keystorePassword, passwords, this.keystoreSAMLKey);
 	}
 
@@ -332,16 +331,16 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 		webSSOProfileOptions.setAuthnContexts(authnContexts());
 		webSSOProfileOptions.setForceAuthN(false);
 		webSSOProfileOptions.setProviderName(providerName);
-		
+
 		return webSSOProfileOptions;
 	}
-	
+
 	@Bean
 	public List<String> authnContexts() {
 		List<String> authnContexts = new ArrayList<>();
-		
+
 		authnContexts.add("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
-		
+
 		return authnContexts;
 	}
 
@@ -360,7 +359,7 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 		extendedMetadata.setEcpEnabled(true);
 		return extendedMetadata;
 	}
-	
+
 	/*
 	* CachingMetadataManager and Related Beans Construction
 	*/
@@ -368,18 +367,18 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Qualifier("metadata")
 	public CachingMetadataManager metadata() throws MetadataProviderException, ResourceException {
 		CachingMetadataManager cachingMetadataManager = new CachingMetadataManager(metadataProviders());
-				
+
 		return cachingMetadataManager;
-	} 
-	
+	}
+
 	@Bean
 	public List<MetadataProvider> metadataProviders() throws MetadataProviderException, ResourceException {
 		List<MetadataProvider> metadataProviders = new ArrayList<>();
 		metadataProviders.add(doiSAMLExtendedMetadataProvider());
-		
+
 		return metadataProviders;
 	}
-	
+
 	//Determines whether or not the provided metadata location is a local file or remote URL
 	private boolean isLocalMetadata() {
 		if(this.metadataLocation != null){
@@ -387,7 +386,7 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -395,11 +394,11 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Qualifier("idp-doi-saml")
 	public ExtendedMetadataDelegate doiSAMLExtendedMetadataProvider() throws MetadataProviderException, ResourceException {
 		ExtendedMetadataDelegate extendedMetadataDelegate;
-		
+
 		//Handle HTTP vs local metadata location
 		if(isLocalMetadata()){
 			ResourceBackedMetadataProvider resourceMetadataProvider;
-		
+
 			//Handle classpath or file system resources
 			if(this.metadataLocation.toLowerCase().startsWith("classpath:")){
 				String classpathLocation = this.metadataLocation.replaceFirst("classpath:", "");
@@ -415,14 +414,14 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 			httpMetadataProvider.setParserPool(parserPool());
 			 extendedMetadataDelegate = new ExtendedMetadataDelegate(httpMetadataProvider, extendedMetadata());
 		}
-		
+
 		extendedMetadataDelegate.setMetadataTrustCheck(false);
 		extendedMetadataDelegate.setMetadataRequireSignature(false);
 
 		this.metadataTimer.purge();
 		return extendedMetadataDelegate;
 	}
-	
+
 	@Bean
 	public MetadataGenerator metadataGenerator() {
 		MetadataGenerator metadataGenerator = new MetadataGenerator();
@@ -431,7 +430,7 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 		metadataGenerator.setIncludeDiscoveryExtension(false);
 		metadataGenerator.setKeyManager(keyManager()); 
 		metadataGenerator.setRequestSigned(false);
-		
+
 		if(waterAuthUrlServerName != null && waterAuthUrlServerName.length() > 0) {
 			String baseUrl = waterAuthUrlScheme + "://" + waterAuthUrlServerName +
 					(waterAuthUrlIncludePort ? ":" + waterAuthUrlServerPort : "" ) + 
@@ -450,7 +449,7 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	public SavedRequestAwareAuthenticationSuccessHandler successRedirectHandler() {
 		SavedRequestAwareAuthenticationSuccessHandler successRedirectHandler = new SavedRequestAwareAuthenticationSuccessHandler();
 		successRedirectHandler.setDefaultTargetUrl(this.loginSuccessTargetUrl);
-		
+
 		return successRedirectHandler;
 	}
 
@@ -519,7 +518,7 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 		bindings.add(httpPAOS11Binding());
 		return new SAMLProcessorImpl(bindings);
 	}
-	
+
 	@Bean
 	public FilterChainProxy samlFilter() throws Exception {
 		List<SecurityFilterChain> chains = new ArrayList<>();
@@ -537,40 +536,38 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 				samlLogoutProcessingFilter()));
 		return new FilterChainProxy(chains);
 	}
-	
+
 	@Bean
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
 
-	@Override  
+	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.httpBasic()
-				.authenticationEntryPoint(samlEntryPoint());
-		http
-			.csrf()
-				.disable();
-		http
+				.authenticationEntryPoint(samlEntryPoint())
+			.and()
+				.csrf()
+					.disable()
 			.addFilterBefore(metadataGeneratorFilter(), ChannelProcessingFilter.class)
-			.addFilterAfter(samlFilter(), BasicAuthenticationFilter.class);
-		http        
+			.addFilterAfter(samlFilter(), BasicAuthenticationFilter.class)
 			.authorizeRequests()
-			.antMatchers(this.samlBaseEndpoint + "/**/").permitAll()
-			.antMatchers(this.logoutSuccessTargetUrl).permitAll()
-			.antMatchers(this.loginErrorTargetUrl).permitAll()
-			.antMatchers("/login/").permitAll()
-			.antMatchers("/oauth/authorize/").permitAll()
-			.anyRequest().authenticated();
-		http
-			.logout()
-				.logoutSuccessUrl(this.logoutSuccessTargetUrl);
+				.antMatchers(this.samlBaseEndpoint + "/**/").permitAll()
+				.antMatchers(this.logoutSuccessTargetUrl).permitAll()
+				.antMatchers(this.loginErrorTargetUrl).permitAll()
+				.antMatchers("/login/").permitAll()
+				.antMatchers("/oauth/authorize/").permitAll()
+				.anyRequest().authenticated()
+			.and()
+				.logout()
+					.logoutSuccessUrl(this.logoutSuccessTargetUrl);
 	}
-	
+
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(samlAuthenticationProvider());
-	}   
+	}
 
 }

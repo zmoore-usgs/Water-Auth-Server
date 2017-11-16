@@ -18,13 +18,13 @@ import org.springframework.transaction.PlatformTransactionManager;
 @Profile("default")
 @EnableJdbcHttpSession
 public class PersistenceConfig {
-	@Value("${dbConnectionUrl}")
+	@Value("${spring.datasource.url}")
 	private String dbConnectionUrl;
-	@Value("${dbUsername}")
+	@Value("${spring.datasource.username}")
 	private String dbUsername;
-	@Value("${dbPassword}")
+	@Value("${spring.datasource.password}")
 	private String dbPassword;
-	@Value("${dbInitializerEnabled:true}")
+	@Value("${spring.session.jdbc.initializer.enabled}")
 	private Boolean dbInitializerEnabled;
 	
 	@Primary

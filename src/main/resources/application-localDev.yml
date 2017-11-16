@@ -1,0 +1,17 @@
+security:
+  oauth2:
+    client:
+      clientId: ${localOauthClientId}
+      clientSecret: ${localOauthClientSecret}
+      grantTypes: ${localOauthClientGrantTypes}
+      scopes: ${localOauthClientScopes}
+    resource:
+      id: ${localOauthResourceId}
+  user:
+    name: ${localUserName}
+    password: ${localUserPassword}
+    role: ${localUserRole}
+    email: ${localUserEmail}
+
+server:
+  context-path: ${localContextPath:/auth}

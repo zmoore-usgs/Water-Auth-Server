@@ -1,25 +1,57 @@
 security:
   basic:
     enabled: false
-  require-ssl: true
-
-samlGroupAttributeName: http://schemas.xmlsoap.org/claims/Group
-samlEmailAttributeName: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress
-samlUsernameAttributeName: http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname
-loginSuccessTargetUrl: /
-loginErrorTargetUrl: /auth-error
-logoutSuccessTargetUrl: /out
-dbInitializerEnabled: true
+  require-ssl: ${requireSsl:true}
+  jwt:
+    key-store: ${keystoreLocation}
+    key-store-password: ${keystorePassword}
+    key-store-oauth-key: ${keystoreOAuthKey}
+    key-store-saml-key: ${keystoreSAMLKey}
+  saml:
+    idp:
+      metadataLocation: ${samlIdpMetadataLocation}
+      provider: ${samlAuthnRequestProviderName:}
+      entity-id: ${samlAuthnRequestEntityId}
+    endpoint:
+      base: ${samlBaseEndpoint:/saml}
+      login: ${samlLoginEndpoint:/login}
+      logout: ${samlLogoutEndpoint:/logout}
+      single-logout: ${samlSingleLogoutEndpoint:/singlelogout}
+      sso: ${samlSSOEndpoint:/sso}
+      sso-hok: ${samlSSOHOKEndpoint:/ssohok}
+      metadata: ${samlMetadataEndpoint:/metadata}
+    attribute-name:
+      group: ${samlGroupAttributeName:http://schemas.xmlsoap.org/claims/Group}
+      email: ${samlEmailAttributeName:http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress}
+      username: ${samlUsernameAttributeName:http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname}
 
 server:
-    port: ${serverPort:8443}
-    ssl:
-        key-store: ${keystoreLocation}
-        key-store-password: ${keystorePassword}
-        key-password: ${keystorePassword}
-        key-alias: ${keystoreSSLKey:tomcat}
-        
+  port: ${serverPort:8443}
+  ssl:
+    key-store: ${keystoreLocation}
+    key-store-password: ${keystorePassword}
+    key-password: ${keystorePassword}
+    key-alias: ${keystoreSSLKey:tomcat}
+  implementation:
+    port: ${waterAuthUrlServerPort:443}
+    server: ${waterAuthUrlServerName:}
+    context: ${waterAuthUrlContextPath:/}
+  routing:
+    login-success: ${loginSuccessTargetUrl:/}
+    login-error: ${loginErrorTargetUrl:/auth-error}
+    lougout-success: ${logoutSuccessTargetUrl:/out}
+
+spring:
+  session:
+    jdbc:
+      initializer:
+        enabled: ${dbInitializerEnabled:true}
+  datasource:
+    url: ${dbConnectionUrl}
+    username: ${dbUsername}
+    password: ${dbPassword}
+
 logging:
   level:
     org:
-      springframework: DEBUG
+      springframework: ${springFrameworkLogLevel:info}

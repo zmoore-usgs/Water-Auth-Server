@@ -21,11 +21,11 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 @Configuration
 public class JwtConfig {
 
-	@Value("${keystoreLocation}")
+	@Value("${security.jwt.key-store}")
 	private String keystorePath;
-	@Value("${keystoreOAuthKey}")
+	@Value("${security.jwt.key-store-oauth-key}")
 	private String keystoreOAuthKey;
-	@Value("${keystorePassword}")
+	@Value("${security.jwt.key-store-password}")
 	private String keystorePassword;
 
 	@Autowired
