@@ -28,6 +28,7 @@ import org.opensaml.util.resource.ClasspathResource;
 import org.opensaml.util.resource.FilesystemResource;
 import org.opensaml.util.resource.ResourceException;
 import org.opensaml.xml.parse.StaticBasicParserPool;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
@@ -50,6 +51,7 @@ import org.springframework.security.saml.SAMLLogoutProcessingFilter;
 import org.springframework.security.saml.SAMLProcessingFilter;
 import org.springframework.security.saml.SAMLWebSSOHoKProcessingFilter;
 import org.springframework.security.saml.context.SAMLContextProviderImpl;
+import org.springframework.security.saml.context.SAMLContextProviderLB;
 import org.springframework.security.saml.key.JKSKeyManager;
 import org.springframework.security.saml.key.KeyManager;
 import org.springframework.security.saml.log.SAMLDefaultLogger;
@@ -91,7 +93,6 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import gov.usgs.wma.mlrauthserver.service.SAMLUserDetailsImpl;
-import org.springframework.security.saml.context.SAMLContextProviderLB;
 
 @Configuration
 @EnableWebSecurity
@@ -118,27 +119,27 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	private String waterAuthUrlContextPath;
 
 	//SAML IDP Configuration
-	@Value("${saml.idp.metadataLocation}")
+	@Value("${security.saml.idp.metadataLocation}")
 	private String metadataLocation;
-	@Value("${saml.idp.provider}")
+	@Value("${security.saml.idp.provider}")
 	private String providerName;
-	@Value("${saml.idp.entity-id}")
+	@Value("${security.saml.idp.entity-id}")
 	private String entityId;
 
 	//Local SAML Endpoint Configuration
-	@Value("${saml.endpoint.base}")
+	@Value("${security.saml.endpoint.base}")
 	private String samlBaseEndpoint;
-	@Value("${saml.endpoint.login}")
+	@Value("${security.saml.endpoint.login}")
 	private String samlLoginEndpoint;
-	@Value("${saml.endpoint.logout}")
+	@Value("${security.saml.endpoint.logout}")
 	private String samlLogoutEndpoint;
-	@Value("${saml.endpoint.single.logout}")
+	@Value("${security.saml.endpoint.single-logout}")
 	private String samlSingleLogoutEndpoint;
-	@Value("${saml.endpoint.sso}")
+	@Value("${security.saml.endpoint.sso}")
 	private String samlSSOEndpoint;
-	@Value("${saml.endpoint.sso-hok}")
+	@Value("${security.saml.endpoint.sso-hok}")
 	private String samlSSOHOKEndpoint;
-	@Value("${saml.endpoint.metadata}")
+	@Value("${security.saml.endpoint.metadata}")
 	private String samlMetadataEndpoint;
 
 	//Login/Logout Routing Configuration
@@ -151,6 +152,9 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private Timer metadataTimer;
 	private MultiThreadedHttpConnectionManager multiThreadedHttpConnectionManager;
+
+	@Autowired
+	SAMLUserDetailsImpl sAMLUserDetailsImpl;
 
 	@PostConstruct
 	public void init() {
@@ -215,7 +219,7 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public SAMLAuthenticationProvider samlAuthenticationProvider() {
 		SAMLAuthenticationProvider samlAuthenticationProvider = new SAMLAuthenticationProvider();
-		samlAuthenticationProvider.setUserDetails(new SAMLUserDetailsImpl());
+		samlAuthenticationProvider.setUserDetails(sAMLUserDetailsImpl);
 		samlAuthenticationProvider.setForcePrincipalAsString(false);
 		return samlAuthenticationProvider;
 	}

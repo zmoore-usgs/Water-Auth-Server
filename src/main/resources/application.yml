@@ -39,7 +39,7 @@ server:
   routing:
     login-success: ${loginSuccessTargetUrl:/}
     login-error: ${loginErrorTargetUrl:/auth-error}
-    lougout-success: ${logoutSuccessTargetUrl:/out}
+    logout-success: ${logoutSuccessTargetUrl:/out}
 
 spring:
   session:
