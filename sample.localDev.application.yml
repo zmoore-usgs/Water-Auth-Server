@@ -18,6 +18,8 @@ localUserPassword: changeMe
 localUserRole: ACTUATOR, DBA_55
 localUserEmail: localusr@usgs.gov
 
+localContextPath: /auth
+
 keystoreLocation: classpath:localkeystore.jks
 keystorePassword: changeMe
 keystoreOAuthKey: tokenkey

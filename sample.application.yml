@@ -1,0 +1,40 @@
+requireSsl: true
+
+keystoreLocation: classpath:localkeystore.jks
+keystorePassword: changeMe
+keystoreSSLKey: tomcat
+keystoreOAuthKey: tokenkey
+keystoreSAMLKey: samlkey
+
+samlIdpMetadataLocation: https://saml-idp.example.gov/metadata.xml
+samlAuthnRequestProviderName: https://auth.example.gov:443/saml/
+samlAuthnRequestEntityId:  https://auth.example.gov:443/saml/
+
+samlBaseEndpoint: /saml
+samlLoginEndpoint: /login
+samlLogoutEndpoint: /logout
+samlSingleLogoutEndpoint: /singlelogout
+samlSSOEndpoint: /sso
+samlSSOHOKEndpoint: /ssohok
+samlMetadataEndpoint: /metadata
+
+samlGroupAttributeName: http://schemas.xmlsoap.org/claims/Group
+samlEmailAttributeName: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress
+samlUsernameAttributeName: http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname
+
+serverPort: 8443
+
+waterAuthUrlServerPort: 443
+waterAuthUrlServerName: auth.example.gov
+waterAuthUrlContextPath: /
+
+loginSuccessTargetUrl: /
+loginErrorTargetUrl: /auth-error
+logoutSuccessTargetUrl: /out
+
+dbInitializerEnabled: true
+dbConnectionUrl: jdbc:mysql://mysql.host.gov/db
+dbUsername: mysqluser
+dbPassword: changeMe
+
+springFrameworkLogLevel: info
