@@ -1,0 +1,26 @@
+spring:
+  profiles:
+    active: localDev
+  autoconfigure:
+    exclude: 
+      - org.springframework.boot.autoconfigure.session.SessionAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+localOauthClientId: local-client
+localOauthClientSecret: changeMe
+localOauthClientGrantTypes: authorization_code, access_token, refresh_token, client_credentials, password
+localOauthClientScopes: user_details
+
+localOauthResourceId: local-app
+
+localUserName: localusr
+localUserPassword: changeMe
+localUserRole: ACTUATOR, DBA_55
+localUserEmail: localusr@usgs.gov
+
+localContextPath: /auth
+
+keystoreLocation: classpath:localkeystore.jks
+keystorePassword: changeMe
+keystoreOAuthKey: tokenkey
+keystoreSAMLKey: null

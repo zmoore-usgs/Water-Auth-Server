@@ -1,12 +1,12 @@
 # Water-Auth-Server
 ## Running Locally
 ### Specifying Environment Variable Values
-The application.yml file in `src/main/resources` should be copied to the project root directory and then the values can be modified to fit your local configuration.
+The sample.application.yml can be copied to application.yml and the values can be modified to fit your local configuration.
 
 ### Running on the proper context
-When running this application locally or on the same host URL as other services it must be mounted on a context other than just `/`. This is required because cookies are port-agnostic and thus if multiple services are running on the same host, with different ports, but still mounted on `/` then the cookies will that are created will overwrite eachother and auth will not function properly. 
+When running this application locally or on the same host URL as other services it must be mounted on a context other than just `/`. This is required because cookies are port-agnostic and thus if multiple services are running on the same host, with different ports, but still mounted on `/` then the cookies will that are created will overwrite each other and auth will not function properly. 
 
-By default the service runs on `/` but this can be changed by adding the following to your application.yml and replacing MY_CONTEXT with the value of your choice.
+By default the service runs on `/` but this can be changed by adding the following to your application.yml and replacing MY_CONTEXT with the value of your choice. Note that the localDev profile includes this setup.
 
 ```
 server:
@@ -20,10 +20,10 @@ As further disucssed in the `Keystore` section below this application uses a key
         - Default value is: `tomcat`
 - A key for signing requests made to the SAML server
     - Defined in environment variable: `keystoreSAMLKey`
-- A key for signing Oauth2 tokens to be cerated and passed to client services
+- A key for signing Oauth2 tokens to be created and passed to client services
     - Defined in environment variable: `keystoreOAuthKey`
 
-    Note that the second and third keys are not necessary when using the `localDev` profile discussed below.
+    Note that the keystoreSAMLKey key is not necessary when using the `localDev` profile discussed below.
 
     Also note that when creating the SSL Key you **must** set the `CN` attribute of the key to be equal to the domain that the service will be running on. When creating this key to be run locally the `CN` should be `localhost`. This is discussed further below.
 
@@ -51,9 +51,11 @@ To specify the store that your client application should use (if that cleint is 
 ### localDev Profile
 This application has two built-in Spring Profiles to aid with local development. 
 
-The default profile, which is run when either no profile is provided or the profile name "default" is provided, is setup to require all external dependeices (i.e: Functioning SAML for Authentication and a database for Session and Client storage with at least one client configured).
+The default profile, which is run when either no profile is provided or the profile name "default" is provided, is setup to require all external dependencies (i.e: Functioning SAML for Authentication and a database for Session and Client storage with at least one client configured).
 
-The localDev profile, which is run when the profile name "localDev" is provided, is setup to require no external dependies - Sessions are stored internally, SAML Authentication is disabled, and a default client (client-id: "nwis") is configured within the application.
+The localDev profile, which is run when the profile name "localDev" is provided, is setup to require no external dependencies - Sessions are stored internally, SAML Authentication is disabled, and a default client is configured within the application.
+
+The sample.localDev.application.yml file is provided as an example to activate the profile and supply required values.
 
 ## Spring Security Client and Session Storage
 This service by default stores session data within a database rather than within the application itself. This allows for multiple running instances of this service to share session information, thereby making the service stateless. Similarly, this service by default also stores Spring Security Ouath2 client information within a database rather than within the application itself. 
@@ -157,6 +159,7 @@ This project is configured to work with docker. Each relevant environemnt variab
 
 ### Keystore
 
+This section still needs work.
 The dockerfile does not include automatic keystore generation, rather a pre-built keystore should be passed in using a docker secret or docker config. The mounted location of this keystore should then be passed in through the `keystoreLocation` environment variable. During the container startup the keystore will be modified to include the public cert of the IDP server in order to allow metadata pulling. The IDP cert properties are listed below.
 
 - **samlIdpHost** - The host of the SAML IDP server that you are connecting to

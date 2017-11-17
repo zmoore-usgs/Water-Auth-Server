@@ -17,16 +17,15 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SAMLUserDetailsImpl implements SAMLUserDetailsService  {
-	// Logger
 	private static final Logger LOG = LoggerFactory.getLogger(SAMLUserDetailsImpl.class);
-	
-	@Value("${samlGroupAttributeName}")
+
+	@Value("${security.saml.attribute-name.group}")
 	private String samlGroupAttributeName;
-	@Value("${samlEmailAttributeName}")
+	@Value("${security.saml.attribute-name.email}")
 	private String samlEmailAttributeName;
-	@Value("${samlUsernameAttributeName}")
+	@Value("${security.saml.attribute-name.username}")
 	private String samlUsernameAttributeName;
-	
+
 	@Override
 	public Object loadUserBySAML(SAMLCredential credential) throws UsernameNotFoundException {
 		Map<String, List<String>> attributeMap = SAMLUtils.getAttributeValueMap(credential);
@@ -38,7 +37,7 @@ public class SAMLUserDetailsImpl implements SAMLUserDetailsService  {
 						
 		return new WaterAuthUser( username, email, addAuthorities(credential));
 	}
-	
+
 	//Generate authorities based on saml assertions
 	private List<GrantedAuthority> addAuthorities(SAMLCredential credential) {
 		List<GrantedAuthority> authorityList = new ArrayList<>();
