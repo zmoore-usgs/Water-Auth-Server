@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 
 ### Added
+- Oauth2 Authorization Codes are persisted in a JDBC database in order to allow for horizontal scaling with multiple instances of Water Auth.
+
+## [0.1.0]
+
+### Added
 - Spring Security SAML Authentication configured to properly work with DOI SAML.
     - Authentication Endpoints: `/saml/login`, `/saml/logout/`, `/saml/gloabllogout/`, `/saml/metadata/`
 
@@ -34,6 +39,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Global exception handler for Http requests
 
 
+[0.1.0]: https://github.com/USGS-CIDA/Water-Auth-Server/compare/waterauthserver-0.1.0...master
 
 [Unreleased]: https://github.com/USGS-CIDA/Water-Auth-Server/tree/master
  
