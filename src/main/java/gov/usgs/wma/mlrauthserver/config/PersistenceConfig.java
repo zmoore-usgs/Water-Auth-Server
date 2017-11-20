@@ -26,7 +26,7 @@ public class PersistenceConfig {
 	private String dbPassword;
 	@Value("${spring.session.jdbc.initializer.enabled}")
 	private Boolean dbInitializerEnabled;
-	
+
 	@Primary
 	@Bean
 	public DataSource dataSource() {
@@ -37,12 +37,12 @@ public class PersistenceConfig {
 		dataSource.setPassword(dbPassword);
 		return dataSource;
 	}
-	
+
 	@Bean
 	public PlatformTransactionManager transactionManager(DataSource dataSource) {
 		return new DataSourceTransactionManager(dataSource); // <3>
 	}
-	
+
 	@Bean
 	public DataSourceInitializer waterauthSourceInitializer(DataSource dataSource) 
 	{
@@ -54,7 +54,7 @@ public class PersistenceConfig {
 		dataSourceInitializer.setDatabasePopulator(databasePopulator);
 
 		String sessionSchema = "org/springframework/session/jdbc/schema-mysql.sql";
-		String clientSchema = "spring_security_oauth2_mysql.sql";
+		String clientSchema = "oauth2_mysql.sql";
 		databasePopulator.addScript(new ClassPathResource(sessionSchema));
 		databasePopulator.addScript(new ClassPathResource(clientSchema));
 		
