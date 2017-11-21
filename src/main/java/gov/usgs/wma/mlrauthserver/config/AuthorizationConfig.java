@@ -3,6 +3,7 @@ package gov.usgs.wma.mlrauthserver.config;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,6 +12,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
+import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
@@ -38,6 +41,11 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 	private JwtAccessTokenConverter accessTokenConverter;
 	@Autowired
 	private DefaultTokenServices tokenServices;
+	
+	@Bean
+	public AuthorizationCodeServices authorizationCodeServices() {
+		return new JdbcAuthorizationCodeServices(dataSource);
+	}
 
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
@@ -56,6 +64,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints
 		.authenticationManager(authenticationManager)
+		.authorizationCodeServices(authorizationCodeServices())
 		.tokenServices(tokenServices)
 		.tokenStore(tokenStore)
 		.accessTokenConverter(accessTokenConverter);

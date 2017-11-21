@@ -1,6 +1,6 @@
 -- Source: https://github.com/spring-projects/spring-security-oauth/blob/master/spring-security-oauth2/src/test/resources/schema.sql
 
-create table oauth_client_details (
+create table if not exists oauth_client_details (
 	client_id VARCHAR(256) PRIMARY KEY,
 	resource_ids VARCHAR(256),
 	client_secret VARCHAR(256),
@@ -12,4 +12,8 @@ create table oauth_client_details (
 	refresh_token_validity INTEGER,
 	additional_information VARCHAR(4096),
 	autoapprove VARCHAR(256)
-) ENGINE=InnoDB;
+);
+
+create table if not exists oauth_code (
+  code VARCHAR(255), authentication BLOB
+);
