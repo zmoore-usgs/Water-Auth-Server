@@ -2,14 +2,14 @@
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
-and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html). (Patch version X.Y.0 is implied if not specified.)
+and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
 ### Added
 - Oauth2 Authorization Codes are persisted in a JDBC database in order to allow for horizontal scaling with multiple instances of Water Auth.
 
-## [0.1.0]
+## [0.1.0] - 2017-11-20
 
 ### Added
 - Spring Security SAML Authentication configured to properly work with DOI SAML.
