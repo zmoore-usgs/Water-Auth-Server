@@ -2,6 +2,7 @@
 /.project
 /.classpath
 /.settings/
+/.vscode
 **/*.jks
 **/metadata/*.xml
 **/*.p12

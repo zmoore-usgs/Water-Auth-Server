@@ -85,14 +85,20 @@ The authentication request sent from the application to the SAML IDP server can 
 
 - **samlAuthnRequestProviderName** - [Default: *empty*] The provider name to specify for the request. This value is optional.
 
+- **samlAuthnContexts** - [Default: *empty*] A comma-separated list of fully-qualified AuthNContext classes to allow for authentication. This value is optional. See: https://msdn.microsoft.com/en-us/library/hh599318.aspx
+
+- **samlPassive** - [Default: false] Whether or not passive sign-on should be allowed. See: https://msdn.microsoft.com/en-us/library/ee895365.aspx
+
+- **samlForceAuth** - [Default: false] Whether or not to the user should be forced to re-authenticate every time the SAML IDP is contacted.
+
 ### SAML Attribute Mapping
 In addition to logging the user in through SAML this service also acts as an Oauth2 Authorization Server and converts some of the returned SAML assertions into Oauth2 authorizations. The following environment variables are used to do this mapping.
 
-- **samlGroupAttributeName** - The SAML attribute key that corresponds to the groups that the user is. The values found attached to this key will be converted into authorizations in the Oauth2 token. The default value is `http://schemas.xmlsoap.org/claims/Group`
+- **samlGroupAttributeName** - [Default: `http://schemas.xmlsoap.org/claims/Group`] The SAML attribute key that corresponds to the groups that the user is part of. The values found attached to this key will be converted into authorizations in the Oauth2 token.
 
-- **samlEmailAttributeName** - The SAML attribute key that corresponds to the email address of the logged-in user. This value will be contained in the Oauth2 requests and JWTs as "email" in the JWT and within the Oauth2 Request Extensions. The default value is `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress`
+- **samlEmailAttributeName** - [Default: `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress`] The SAML attribute key that corresponds to the email address of the logged-in user. This value will be contained in the Oauth2 requests and JWTs as "email" in the JWT and within the Oauth2 Request Extensions.
 
-- **samlUsernameAttributeName** - The SAML attribute key that corresponds to the username of the logged-in user. This value will be used as the principal value and name in the Spring Security Context and will be contained in the JWTs as "user_name". The default value is `http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname`
+- **samlUsernameAttributeName** - [Default: `http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname`] The SAML attribute key that corresponds to the username of the logged-in user. This value will be used as the principal value and name in the Spring Security Context and will be contained in the JWTs as "user_name".
 
 ### Keystore
 A keystore is used by the SAML service to ensure secure communication with the IDP server. Your keystore should contain the certs used on the IDP server as well as any certs required to reach your metadata XML if it is being supplied via http. The same keystore is also used by the Oauth2 portion of the application in order to sign JWT tokens.
