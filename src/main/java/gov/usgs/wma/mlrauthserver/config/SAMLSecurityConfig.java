@@ -5,6 +5,7 @@
 package gov.usgs.wma.mlrauthserver.config;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -119,12 +120,18 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	private String waterAuthUrlContextPath;
 
 	//SAML IDP Configuration
-	@Value("${security.saml.idp.metadataLocation}")
+	@Value("${security.saml.idp.metadata-location}")
 	private String metadataLocation;
 	@Value("${security.saml.idp.provider}")
 	private String providerName;
 	@Value("${security.saml.idp.entity-id}")
 	private String entityId;
+	@Value("${security.saml.idp.passive}")
+	private boolean passiveAuth;
+	@Value("${security.saml.idp.force-auth}")
+	private boolean forceAuth;
+	@Value("${security.saml.idp.auth-contexts}")
+	private String csvAuthContexts;
 
 	//Local SAML Endpoint Configuration
 	@Value("${security.saml.endpoint.base}")
@@ -331,9 +338,14 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	public WebSSOProfileOptions webSSOProfileOptions() {
 		WebSSOProfileOptions webSSOProfileOptions = new WebSSOProfileOptions();
 		webSSOProfileOptions.setIncludeScoping(false);
-		webSSOProfileOptions.setAuthnContextComparison(AuthnContextComparisonTypeEnumeration.EXACT);
-		webSSOProfileOptions.setAuthnContexts(authnContexts());
-		webSSOProfileOptions.setForceAuthN(false);
+
+		if(csvAuthContexts != null && csvAuthContexts.length() > 0) {
+			webSSOProfileOptions.setAuthnContextComparison(AuthnContextComparisonTypeEnumeration.EXACT);
+			webSSOProfileOptions.setAuthnContexts(authnContexts());
+		}
+
+		webSSOProfileOptions.setForceAuthN(forceAuth);
+		webSSOProfileOptions.setPassive(passiveAuth);
 		webSSOProfileOptions.setProviderName(providerName);
 
 		return webSSOProfileOptions;
@@ -341,11 +353,11 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public List<String> authnContexts() {
-		List<String> authnContexts = new ArrayList<>();
-
-		authnContexts.add("urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport");
-
-		return authnContexts;
+		if(csvAuthContexts != null && csvAuthContexts.length() > 0) {
+			return Arrays.asList(csvAuthContexts.split(","));
+		} else {
+			return new ArrayList<>();
+		}
 	}
 
 	@Bean
@@ -561,6 +573,7 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers(this.samlBaseEndpoint + "/**/").permitAll()
 				.antMatchers(this.logoutSuccessTargetUrl).permitAll()
 				.antMatchers(this.loginErrorTargetUrl).permitAll()
+				.antMatchers("/health/").permitAll()
 				.antMatchers("/login/").permitAll()
 				.antMatchers("/oauth/authorize/").permitAll()
 				.anyRequest().authenticated()

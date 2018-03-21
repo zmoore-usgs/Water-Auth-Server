@@ -9,9 +9,12 @@ security:
     key-store-saml-key: ${keystoreSAMLKey}
   saml:
     idp:
-      metadataLocation: ${samlIdpMetadataLocation}
+      metadata-location: ${samlIdpMetadataLocation}
       provider: ${samlAuthnRequestProviderName:}
       entity-id: ${samlAuthnRequestEntityId}
+      auth-contexts: ${samlAuthnContexts:}
+      passive: ${samlPassive:true}
+      force-auth: ${samlForceAuth:false}
     endpoint:
       base: ${samlBaseEndpoint:/saml}
       login: ${samlLoginEndpoint:/login}
