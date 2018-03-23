@@ -96,7 +96,7 @@
 
     <scm>
         <connection>scm:git:https://github.com/USGS-CIDA/Water-Auth-Server.git</connection>
-        <developerConnection>scm:git:https://{${env.GITHUB_USER}:${env.GITHUB_PASS}@github.com/USGS-CIDA/Water-Auth-Server.git</developerConnection>
+        <developerConnection>scm:git:https://${env.GITHUB_USER}:${env.GITHUB_PASS}@github.com/USGS-CIDA/Water-Auth-Server.git</developerConnection>
         <url>https://github.com/USGS-CIDA/Water-Auth-Server</url>
         <tag>waterauthserver-0.1.0</tag>
     </scm>
