@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>gov.usgs.wma</groupId>
     <artifactId>waterauthserver</artifactId>
-    <version>0.3.2</version>
+    <version>0.3.3-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <parent>
@@ -98,6 +98,6 @@
         <connection>scm:git:https://github.com/USGS-CIDA/Water-Auth-Server.git</connection>
         <developerConnection>scm:git:https://${env.GITHUB_USER}:${env.GITHUB_PASS}@github.com/USGS-CIDA/Water-Auth-Server.git</developerConnection>
         <url>https://github.com/USGS-CIDA/Water-Auth-Server</url>
-        <tag>waterauthserver-0.3.2</tag>
+        <tag>waterauthserver-0.1.0</tag>
     </scm>
 </project>
