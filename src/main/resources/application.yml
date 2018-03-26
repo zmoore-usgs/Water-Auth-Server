@@ -13,7 +13,7 @@ security:
       provider: ${samlAuthnRequestProviderName:}
       entity-id: ${samlAuthnRequestEntityId}
       auth-contexts: ${samlAuthnContexts:}
-      passive: ${samlPassive:true}
+      passive: ${samlPassive:false}
       force-auth: ${samlForceAuth:false}
     endpoint:
       base: ${samlBaseEndpoint:/saml}
