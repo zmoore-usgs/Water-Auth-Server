@@ -6,7 +6,7 @@ create table if not exists oauth_client_details (
 	client_secret VARCHAR(256),
 	scope VARCHAR(256),
 	authorized_grant_types VARCHAR(256),
-	web_server_redirect_uri VARCHAR(256),
+	web_server_redirect_uri VARCHAR(4096),
 	authorities VARCHAR(256),
 	access_token_validity INTEGER,
 	refresh_token_validity INTEGER,
