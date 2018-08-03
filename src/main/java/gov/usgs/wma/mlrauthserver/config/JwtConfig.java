@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.core.io.Resource;
+import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
@@ -48,13 +49,18 @@ public class JwtConfig {
 			FileSystemResourceLoader loader = new FileSystemResourceLoader();
 			storeFile = loader.getResource(this.keystorePath);
 		}
-
-		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
 		KeyStoreKeyFactory keyStoreKeyFactory =
 				new KeyStoreKeyFactory(storeFile,this.keystorePassword.toCharArray());
-		converter.setKeyPair(keyStoreKeyFactory.getKeyPair(this.keystoreOAuthKey));
+
+		WaterAuthJwtUserAuthConverter userConverter = new WaterAuthJwtUserAuthConverter();
+		DefaultAccessTokenConverter tokenConverter = new DefaultAccessTokenConverter();
+		tokenConverter.setUserTokenConverter(userConverter);
+
+		JwtAccessTokenConverter jwtConverter = new JwtAccessTokenConverter();
+		jwtConverter.setKeyPair(keyStoreKeyFactory.getKeyPair(this.keystoreOAuthKey));
+		jwtConverter.setAccessTokenConverter(tokenConverter);
 		
-		return converter;
+		return jwtConverter;
 	}
 
 	@Bean
