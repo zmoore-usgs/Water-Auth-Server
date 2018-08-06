@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Profile("default")
 public class WaterAuthJwtEnhancer implements TokenEnhancer {
-	protected final String EMAIL_JWT_KEY = "email"; //User Email
+	public static final String EMAIL_JWT_KEY = "email"; //User Email
 
 	@Override
 	public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
