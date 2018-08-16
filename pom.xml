@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>gov.usgs.wma</groupId>
     <artifactId>waterauthserver</artifactId>
-    <version>0.3.7-SNAPSHOT</version>
+    <version>0.3.7</version>
     <packaging>jar</packaging>
 
     <parent>
