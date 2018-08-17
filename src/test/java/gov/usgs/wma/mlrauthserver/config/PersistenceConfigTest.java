@@ -15,8 +15,6 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,14 +40,6 @@ public class PersistenceConfigTest {
 	
 	@Autowired
 	private DataSource dataSource;
-	
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
 	
 	@Test
 	public void testConnectionIsNotClosed() throws SQLException {
