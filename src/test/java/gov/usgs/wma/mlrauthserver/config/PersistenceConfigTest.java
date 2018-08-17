@@ -1,6 +1,7 @@
 package gov.usgs.wma.mlrauthserver.config;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -71,8 +72,10 @@ public class PersistenceConfigTest {
 					tableNames.add(resultSet.getString(1));
 				}
 			}
-			assertTrue(String.format("%s not in database table names", "OAUTH_CLIENT_DETAILS"), tableNames.contains("OAUTH_CLIENT_DETAILS"));
-			assertTrue(String.format("%s not in database table names", "OAUTH_CODE"), tableNames.contains("OAUTH_CODE"));
+			String format = "%s not in database table names";
+			assertTrue(String.format(format, "OAUTH_CLIENT_DETAILS"), tableNames.contains("OAUTH_CLIENT_DETAILS"));
+			assertTrue(String.format(format, "OAUTH_CODE"), tableNames.contains("OAUTH_CODE"));
+			assertFalse(String.format("%s is in database table names (should not be)", "I_DONT_EXIST"), tableNames.contains("I_DONT_EXIST"));
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}
