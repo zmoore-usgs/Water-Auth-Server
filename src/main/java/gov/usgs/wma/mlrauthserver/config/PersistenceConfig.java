@@ -26,12 +26,14 @@ public class PersistenceConfig {
 	private String dbPassword;
 	@Value("${spring.session.jdbc.initializer.enabled}")
 	private Boolean dbInitializerEnabled;
+	@Value("${spring.datasource.driverClassName:com.mysql.jdbc.Driver}")
+	private String driverClassName;
 
 	@Primary
 	@Bean
 	public DataSource dataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
+		dataSource.setDriverClassName(driverClassName);
 		dataSource.setUrl(dbConnectionUrl);
 		dataSource.setUsername(dbUsername);
 		dataSource.setPassword(dbPassword);
