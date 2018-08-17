@@ -5,10 +5,18 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
-### Added
-- Dockerfile Healthcheck
+### Updated
+- isuftin@usgs.gov - Using Spring Boot 1.5.8-RELEASE
+- isuftin@usgs.gov - Parameterized driverClassName in PersistenceConfig to allow for H2 driver
+during unit testing. Defaulting to com.mysql.jdbc.Driver
+
+### Removed
+- isuftin@usgs.gov - Dockerfile and associate configuration. Now in https://github.com/USGS-CIDA/docker-water-auth-server
 
 ### Added
+- isuftin@usgs.gov - PersistenceConfigTest jUnit test using in-memory database  
+- isuftin@usgs.gov - H2 maven dependency in test scope
+- isuftin@usgs.gov - TravisCI testing
 - Oauth2 Authorization Codes are persisted in a JDBC database in order to allow for horizontal scaling with multiple instances of Water Auth.
 
 ## [0.1.0] - 2017-11-20
