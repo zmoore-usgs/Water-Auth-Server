@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/USGS-CIDA/Water-Auth-Server.svg?branch=master)](https://travis-ci.org/USGS-CIDA/Water-Auth-Server)
+
 # Water-Auth-Server
 ## Running Locally
 ### Specifying Environment Variable Values

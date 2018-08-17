@@ -14,6 +14,7 @@ during unit testing. Defaulting to com.mysql.jdbc.Driver
 - isuftin@usgs.gov - Dockerfile and associate configuration. Now in https://github.com/USGS-CIDA/docker-water-auth-server
 
 ### Added
+- isuftin@usgs.gov - Travis markdown 
 - isuftin@usgs.gov - JwtConfigTest jUnit test using in-memory database  
 - isuftin@usgs.gov - PersistenceConfigTest jUnit test using in-memory database  
 - isuftin@usgs.gov - H2 maven dependency in test scope
