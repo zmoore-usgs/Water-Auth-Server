@@ -4,6 +4,7 @@
 /.settings/
 /.vscode
 **/*.jks
+!src/test/resources/mytest.jks
 **/metadata/*.xml
 **/*.p12
 **/*.crt
