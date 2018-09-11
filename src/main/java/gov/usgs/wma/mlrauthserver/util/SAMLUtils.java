@@ -9,15 +9,10 @@ import org.opensaml.saml2.core.Attribute;
 import org.opensaml.xml.XMLObject;
 import org.opensaml.xml.schema.XSString;
 import org.opensaml.xml.schema.impl.XSAnyImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import org.springframework.security.saml.SAMLCredential;
 
 public class SAMLUtils {
-	// Logger
-	private static final Logger LOG = LoggerFactory.getLogger(SAMLUtils.class);
-	
 	public static  Map<String,List<String>> getAttributeValueMap(SAMLCredential credentials){
 		Map<String,List<String>> returnMap = new HashMap<>();
 		

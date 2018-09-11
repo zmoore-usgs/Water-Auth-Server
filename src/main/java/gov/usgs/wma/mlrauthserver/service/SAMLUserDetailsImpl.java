@@ -33,7 +33,7 @@ public class SAMLUserDetailsImpl implements SAMLUserDetailsService  {
 		String email = attributeMap.get(samlEmailAttributeName).get(0);
 		String username = attributeMap.get(samlUsernameAttributeName).get(0);
 				
-		LOG.info(username + " (" + email + ") logged in.");
+		LOG.debug(username + " (" + email + ") logged in.");
 						
 		return new WaterAuthUser( username, email, addAuthorities(credential));
 	}

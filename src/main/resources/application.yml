@@ -27,6 +27,9 @@ security:
       group: ${samlGroupAttributeName:http://schemas.xmlsoap.org/claims/Group}
       email: ${samlEmailAttributeName:http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress}
       username: ${samlUsernameAttributeName:http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname}
+    logging:
+      messages: false
+      errors: true
 
 server:
   port: ${serverPort:8443}
