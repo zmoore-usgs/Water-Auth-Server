@@ -17,7 +17,7 @@ public class SAMLUtils {
 		Map<String,List<String>> returnMap = new HashMap<>();
 		
 		for(Attribute attr : credentials.getAttributes()){
-			if(attr.getAttributeValues().size() > 0){
+			if(attr.getAttributeValues() != null){
 				List<String> returnList = new ArrayList<>();
 				
 				for(XMLObject attrValue : attr.getAttributeValues()){
@@ -46,5 +46,28 @@ public class SAMLUtils {
 		}
 		
 		return returnVal;
+	}
+
+	public static List<String> getFirstMatchingAttributeValue(Map<String, List<String>> attributeMap, String[] keyList, Boolean errorIfEmpty) {
+		List<String> matched = new ArrayList<>();
+		for(String key : keyList) {
+			List<String> value = attributeMap.get(key);
+			if(value != null) {
+				if(!value.isEmpty()) {
+					return value;
+				}
+				matched.add(key);
+			}
+		}
+
+		if(!matched.isEmpty() && errorIfEmpty) {
+			throw new RuntimeException("SAML response contained matching keys: [" + String.join(",", matched)
+				+ "] but none of the matching keys contained any data!");
+		} else if(matched.isEmpty()) {
+			throw new RuntimeException("SAML response had no key matching any of: [" + String.join(",", keyList) 
+				+ "]. Response Keys: [" + String.join(",", attributeMap.keySet()) + "].\n");
+		}
+
+		return new ArrayList<>();
 	}
 }

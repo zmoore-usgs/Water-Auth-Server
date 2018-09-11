@@ -23,10 +23,11 @@ security:
       sso: ${samlSSOEndpoint:/sso}
       sso-hok: ${samlSSOHOKEndpoint:/ssohok}
       metadata: ${samlMetadataEndpoint:/metadata}
-    attribute-name:
-      group: ${samlGroupAttributeName:http://schemas.xmlsoap.org/claims/Group}
-      email: ${samlEmailAttributeName:http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress}
-      username: ${samlUsernameAttributeName:http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname}
+    attribute-names:
+      group: ${samlGroupAttributeNames:http://schemas.xmlsoap.org/claims/Group}
+      email: ${samlEmailAttributeNames:http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress}
+      username: ${samlUsernameAttributeNames:http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname}
+    include-groups: 
     logging:
       messages: false
       errors: true
