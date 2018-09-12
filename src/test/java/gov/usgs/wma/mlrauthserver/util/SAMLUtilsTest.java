@@ -102,6 +102,23 @@ public class SAMLUtilsTest {
     }
 
     @Test
+    public void getAttributeValueMapTest4() {
+        Attribute attr1 = mock(Attribute.class);
+        when(attr1.getName()).thenReturn("emailkey1");
+        when(attr1.getAttributeValues()).thenReturn(null);
+        Attribute attr2 = mock(Attribute.class);
+        when(attr2.getName()).thenReturn("usernamekey1");
+        when(attr2.getAttributeValues()).thenReturn(null);
+        Attribute attr3 = mock(Attribute.class);
+        when(attr3.getName()).thenReturn("groupkey1");
+        when(attr3.getAttributeValues()).thenReturn(null);
+        samlCredential = mock(SAMLCredential.class);
+        when(samlCredential.getAttributes()).thenReturn(Arrays.asList(attr1, attr2, attr3));
+        Map<String,List<String>> result = SAMLUtils.getAttributeValueMap(samlCredential);
+        assertEquals(result.keySet().size(), 0);
+    }
+
+    @Test
     public void getAttributeTextValueTest() {
         XSString val1 = mock(XSString.class);
         when(val1.getValue()).thenReturn("test");
@@ -122,56 +139,29 @@ public class SAMLUtilsTest {
         attrMap.put("key2", Arrays.asList("test3"));
         attrMap.put("key3", new ArrayList<>());
 
-        List<String> result = SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key1"}, false);
+        List<String> result = SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key1"});
         assertEquals(result.size(), 2);
         assertThat(result, containsInAnyOrder("test1", "test2"));
         
-        result = SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key1", "key2"}, false);
+        result = SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key1", "key2"});
         assertEquals(result.size(), 2);
         assertThat(result, containsInAnyOrder("test1", "test2"));
 
-        result = SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key2", "key1"}, false);
+        result = SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key2", "key1"});
         assertEquals(result.size(), 1);
         assertThat(result, containsInAnyOrder("test3"));
 
-        result = SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key2"}, false);
+        result = SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key2"});
         assertEquals(result.size(), 1);
         assertThat(result, containsInAnyOrder("test3"));
 
-        result = SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key1"}, true);
+        result = SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key3", "key1"});
         assertEquals(result.size(), 2);
         assertThat(result, containsInAnyOrder("test1", "test2"));
 
-        result = SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key1", "key2"}, true);
+        result = SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key1", "key3"});
         assertEquals(result.size(), 2);
         assertThat(result, containsInAnyOrder("test1", "test2"));
-
-        result = SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key2", "key1"}, true);
-        assertEquals(result.size(), 1);
-        assertThat(result, containsInAnyOrder("test3"));
-
-        result = SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key2"}, true);
-        assertEquals(result.size(), 1);
-        assertThat(result, containsInAnyOrder("test3"));
-
-        result = SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key3", "key1"}, false);
-        assertEquals(result.size(), 2);
-        assertThat(result, containsInAnyOrder("test1", "test2"));
-
-        result = SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key1", "key3"}, false);
-        assertEquals(result.size(), 2);
-        assertThat(result, containsInAnyOrder("test1", "test2"));
-
-        result = SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key3", "key1"}, true);
-        assertEquals(result.size(), 2);
-        assertThat(result, containsInAnyOrder("test1", "test2"));
-
-        result = SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key1", "key3"}, true);
-        assertEquals(result.size(), 2);
-        assertThat(result, containsInAnyOrder("test1", "test2"));
-
-        result = SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key3"}, false);
-        assertEquals(result.size(), 0);
     }
 
     @Test
@@ -180,23 +170,16 @@ public class SAMLUtilsTest {
         attrMap.put("key1", new ArrayList<>());
 
         try {
-            SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key1"}, true);
+            SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key1"});
             fail("Expected RuntimeException");
         } catch(RuntimeException e) {
             assertTrue(e.getMessage().contains("but none of the matching keys contained any data!"));
         }
 
         try {
-            SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key2"}, false);
+            SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key2"});
             fail("Expected RuntimeException");
         } catch(RuntimeException e) {
-            assertTrue(e.getMessage().contains("SAML response had no key matching any of"));
-        }
-
-        try {
-            SAMLUtils.getFirstMatchingAttributeValue(attrMap, new String[]{"key2"}, true);
-            fail("Expected RuntimeException");
-        } catch(RuntimeException e) { 
             assertTrue(e.getMessage().contains("SAML response had no key matching any of"));
         }
     }

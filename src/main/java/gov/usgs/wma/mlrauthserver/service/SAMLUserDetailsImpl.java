@@ -4,6 +4,7 @@ import gov.usgs.wma.mlrauthserver.model.WaterAuthUser;
 import gov.usgs.wma.mlrauthserver.util.SAMLUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -41,30 +42,36 @@ public class SAMLUserDetailsImpl implements SAMLUserDetailsService  {
 	public Object loadUserBySAML(SAMLCredential credential) throws UsernameNotFoundException {
 		Map<String, List<String>> attributeMap = SAMLUtils.getAttributeValueMap(credential);
 
-		String email = SAMLUtils.getFirstMatchingAttributeValue(attributeMap, samlEmailAttributeNames, true).get(0);
-		String username = SAMLUtils.getFirstMatchingAttributeValue(attributeMap, samlUsernameAttributeNames, true).get(0);
-				
-		LOG.debug(username + " (" + email + ") logged in.");
-						
-		return new WaterAuthUser(username, email, addAuthorities(attributeMap));
+		try {
+			String email = SAMLUtils.getFirstMatchingAttributeValue(attributeMap, this.samlEmailAttributeNames).get(0);
+			String username = SAMLUtils.getFirstMatchingAttributeValue(attributeMap, this.samlUsernameAttributeNames).get(0);
+			LOG.debug(username + " (" + email + ") logged in.");
+			return new WaterAuthUser(username, email, addAuthorities(attributeMap));
+		} catch(RuntimeException e) {
+			throw e;
+		}
 	}
 
 	//Generate authorities based on saml assertions
 	protected List<GrantedAuthority> addAuthorities(Map<String, List<String>> attributeMap) {
-		List<GrantedAuthority> authorityList = new ArrayList<>();		
-		List<String> groupList = SAMLUtils.getFirstMatchingAttributeValue(attributeMap, samlGroupAttributeNames, false);
-		
-		if(!groupList.isEmpty()) {
+		List<GrantedAuthority> authorityList = new ArrayList<>();
+		List<String> groupList = null;
+
+		try {
+			groupList = SAMLUtils.getFirstMatchingAttributeValue(attributeMap, this.samlGroupAttributeNames);
+		} catch (RuntimeException e) {
+			LOG.warn("No group information found in SAML response. Caused By: " + e.getMessage());
+		}
+
+		if(groupList != null) {
 			for(String group : groupList){
 				//Filter to only groups we want included
-				for(String include : includeGroups) {
-					if(group.equals(include)) {
-						authorityList.add(new SimpleGrantedAuthority(group));
-						break;
-					}
+				if(Arrays.asList(this.includeGroups).contains(group)) {
+					authorityList.add(new SimpleGrantedAuthority(group));
 				}
 			}
 		}
+		
 		return authorityList;
 	}
 }

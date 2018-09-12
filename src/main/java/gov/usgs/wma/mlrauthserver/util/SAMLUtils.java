@@ -48,7 +48,7 @@ public class SAMLUtils {
 		return returnVal;
 	}
 
-	public static List<String> getFirstMatchingAttributeValue(Map<String, List<String>> attributeMap, String[] keyList, Boolean errorIfEmpty) {
+	public static List<String> getFirstMatchingAttributeValue(Map<String, List<String>> attributeMap, String[] keyList) {
 		List<String> matched = new ArrayList<>();
 		for(String key : keyList) {
 			List<String> value = attributeMap.get(key);
@@ -60,14 +60,15 @@ public class SAMLUtils {
 			}
 		}
 
-		if(!matched.isEmpty() && errorIfEmpty) {
-			throw new RuntimeException("SAML response contained matching keys: [" + String.join(",", matched)
-				+ "] but none of the matching keys contained any data!");
-		} else if(matched.isEmpty()) {
-			throw new RuntimeException("SAML response had no key matching any of: [" + String.join(",", keyList) 
-				+ "]. Response Keys: [" + String.join(",", attributeMap.keySet()) + "].\n");
+		String errorText;
+		if(!matched.isEmpty()) {
+			errorText = "SAML response contained matching keys: [" + String.join(",", matched)
+				+ "] but none of the matching keys contained any data!";
+		} else {
+			errorText = "SAML response had no key matching any of: [" + String.join(",", keyList) 
+				+ "]. Response Keys: [" + String.join(",", attributeMap.keySet()) + "].\n";
 		}
-
-		return new ArrayList<>();
+		
+		throw new RuntimeException(errorText);
 	}
 }
