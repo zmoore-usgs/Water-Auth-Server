@@ -61,14 +61,13 @@ public class SAMLUserDetailsImpl implements SAMLUserDetailsService  {
 			groupList = SAMLUtils.getFirstMatchingAttributeValue(attributeMap, this.samlGroupAttributeNames);
 		} catch (RuntimeException e) {
 			LOG.warn("No group information found in SAML response. Caused By: " + e.getMessage());
+			return authorityList;
 		}
 
-		if(groupList != null) {
-			for(String group : groupList){
-				//Filter to only groups we want included
-				if(Arrays.asList(this.includeGroups).contains(group)) {
-					authorityList.add(new SimpleGrantedAuthority(group));
-				}
+		for(String group : groupList){
+			//Filter to only groups we want included
+			if(Arrays.asList(this.includeGroups).contains(group)) {
+				authorityList.add(new SimpleGrantedAuthority(group));
 			}
 		}
 		
