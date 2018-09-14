@@ -34,6 +34,10 @@ public class WaterAuthResourceIdAuthsDAO {
         } catch(EmptyResultDataAccessException e) {
             LOG.debug("No matching entry in oauth_resource_id_auths for resource_id=" + resourceId);
             return null;
+        } catch(Exception e) {
+            LOG.error("An unexpected error occurred while attempting to fetch data for resource_id=" + resourceId +
+                "from oauth_resource_id_auths. Error: " + e.getMessage());
+            throw(e);
         }
     }
 
