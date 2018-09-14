@@ -35,9 +35,6 @@ public class SAMLUserDetailsImpl implements SAMLUserDetailsService  {
 	@Value("${security.saml.attribute-names.username}")
 	private String[] samlUsernameAttributeNames;
 
-	@Value("${security.saml.include-groups:}")
-	private String[] includeGroups;
-
 	@Override
 	public Object loadUserBySAML(SAMLCredential credential) throws UsernameNotFoundException {
 		Map<String, List<String>> attributeMap = SAMLUtils.getAttributeValueMap(credential);
@@ -65,10 +62,7 @@ public class SAMLUserDetailsImpl implements SAMLUserDetailsService  {
 		}
 
 		for(String group : groupList){
-			//Filter to only groups we want included
-			if(Arrays.asList(this.includeGroups).contains(group)) {
-				authorityList.add(new SimpleGrantedAuthority(group));
-			}
+			authorityList.add(new SimpleGrantedAuthority(group));
 		}
 		
 		return authorityList;

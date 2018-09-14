@@ -35,8 +35,7 @@ import gov.usgs.wma.mlrauthserver.model.WaterAuthUser;
 @TestPropertySource(properties = { 
 		"security.saml.attribute-names.group=groupkey1,groupkey2", 
 		"security.saml.attribute-names.email=emailkey1",
-		"security.saml.attribute-names.username=usernamekey1", 
-		"security.saml.include-groups=group1,group2", })
+		"security.saml.attribute-names.username=usernamekey1"})
 @ContextConfiguration(classes = { SAMLUserDetailsImpl.class })
 public class SAMLUserDetailsImplTest {
     @Autowired
@@ -80,19 +79,6 @@ public class SAMLUserDetailsImplTest {
         assertEquals(authorityList.get(0).getAuthority(), "group2");
 
         attrMap.clear();
-        attrMap.put("groupkey1", Arrays.asList("group1","group2","group3"));
-        authorityList = sAMLUserDetailsImpl.addAuthorities(attrMap);
-        assertFalse(authorityList.isEmpty());
-        assertEquals(authorityList.size(), 2);
-        assertEquals(authorityList.get(0).getAuthority(), "group1");
-        assertEquals(authorityList.get(1).getAuthority(), "group2");
-
-        attrMap.clear();
-        attrMap.put("groupkey1", Arrays.asList("group3"));
-        authorityList = sAMLUserDetailsImpl.addAuthorities(attrMap);
-        assertTrue(authorityList.isEmpty());
-
-        attrMap.clear();
         authorityList = sAMLUserDetailsImpl.addAuthorities(attrMap);
         assertTrue(authorityList.isEmpty());
 
@@ -130,8 +116,9 @@ public class SAMLUserDetailsImplTest {
         assertEquals(((WaterAuthUser)result).getUsername(), "test1");
         assertEquals(((WaterAuthUser)result).getEmail(), "test1@test.gov");
         assertEquals(((WaterAuthUser)result).getPassword(), null);
-        assertEquals(((WaterAuthUser)result).getAuthorities().size(), 1);
+        assertEquals(((WaterAuthUser)result).getAuthorities().size(), 2);
         assertEquals(((GrantedAuthority)((WaterAuthUser)result).getAuthorities().toArray()[0]).getAuthority(), "group1");
+        assertEquals(((GrantedAuthority)((WaterAuthUser)result).getAuthorities().toArray()[1]).getAuthority(), "group3");
     }
 
     @Test
@@ -142,10 +129,6 @@ public class SAMLUserDetailsImplTest {
         when(attr1Val2.getValue()).thenReturn("test2@test.gov");
         XSString attr2Val1 = mock(XSString.class);
         when(attr2Val1.getValue()).thenReturn("test1");
-        XSString attr3Val1 = mock(XSString.class);
-        when(attr3Val1.getValue()).thenReturn("group1");
-        XSString attr3Val2 = mock(XSString.class);
-        when(attr3Val2.getValue()).thenReturn("group3");
         Attribute attr1 = mock(Attribute.class);
         when(attr1.getName()).thenReturn("emailkey1");
         when(attr1.getAttributeValues()).thenReturn(Arrays.asList(attr1Val1, attr1Val2));
@@ -176,7 +159,7 @@ public class SAMLUserDetailsImplTest {
         XSString attr3Val1 = mock(XSString.class);
         when(attr3Val1.getValue()).thenReturn("group1");
         XSString attr3Val2 = mock(XSString.class);
-        when(attr3Val2.getValue()).thenReturn("group3");
+        when(attr3Val2.getValue()).thenReturn("group2");
         Attribute attr1 = mock(Attribute.class);
         when(attr1.getName()).thenReturn("emailkey1");
         when(attr1.getAttributeValues()).thenReturn(Arrays.asList(attr1Val1, attr1Val2));
@@ -208,7 +191,7 @@ public class SAMLUserDetailsImplTest {
         XSString attr3Val1 = mock(XSString.class);
         when(attr3Val1.getValue()).thenReturn("group1");
         XSString attr3Val2 = mock(XSString.class);
-        when(attr3Val2.getValue()).thenReturn("group3");
+        when(attr3Val2.getValue()).thenReturn("group2");
         Attribute attr1 = mock(Attribute.class);
         when(attr1.getName()).thenReturn("emailkey2");
         when(attr1.getAttributeValues()).thenReturn(Arrays.asList(attr1Val1, attr1Val2));
@@ -216,7 +199,7 @@ public class SAMLUserDetailsImplTest {
         when(attr2.getName()).thenReturn("usernamekey1");
         when(attr2.getAttributeValues()).thenReturn(Arrays.asList(attr2Val1));
         Attribute attr3 = mock(Attribute.class);
-        when(attr3.getName()).thenReturn("groupkey3");
+        when(attr3.getName()).thenReturn("groupkey1");
         when(attr3.getAttributeValues()).thenReturn(Arrays.asList(attr3Val1, attr3Val2));
         samlCredential = mock(SAMLCredential.class);
         when(samlCredential.getAttributes()).thenReturn(Arrays.asList(attr1, attr2, attr3));

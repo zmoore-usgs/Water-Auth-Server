@@ -1,4 +1,4 @@
-package gov.usgs.wma.mlrauthserver.config;
+package gov.usgs.wma.mlrauthserver.config.local;
 
 import java.util.Arrays;
 
@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.FileSystemResourceLoader;
 import org.springframework.core.io.Resource;
+import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
@@ -19,11 +20,11 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
-import gov.usgs.wma.mlrauthserver.dao.WaterAuthResourceIdAuthsDAO;
+import gov.usgs.wma.mlrauthserver.config.WaterAuthJwtUserAuthConverter;
 
 @Configuration
-@Profile("default")
-public class JwtConfig {
+@Profile("localDev")
+public class LocalJwtConfig {
 
 	@Value("${security.jwt.key-store}")
 	private String keystorePath;
@@ -34,9 +35,6 @@ public class JwtConfig {
 
 	@Autowired
 	TokenEnhancer tokenEnhancer;
-
-	@Autowired
-	WaterAuthResourceIdAuthsDAO authsDao;
 
 	@Bean
 	public TokenStore tokenStore() {
@@ -59,7 +57,7 @@ public class JwtConfig {
 				new KeyStoreKeyFactory(storeFile,this.keystorePassword.toCharArray());
 
 		WaterAuthJwtUserAuthConverter userConverter = new WaterAuthJwtUserAuthConverter();
-		WaterAuthDBFilteredAccessTokenConverter tokenConverter = new WaterAuthDBFilteredAccessTokenConverter(authsDao);
+		DefaultAccessTokenConverter tokenConverter = new DefaultAccessTokenConverter();
 		tokenConverter.setUserTokenConverter(userConverter);
 
 		JwtAccessTokenConverter jwtConverter = new JwtAccessTokenConverter();

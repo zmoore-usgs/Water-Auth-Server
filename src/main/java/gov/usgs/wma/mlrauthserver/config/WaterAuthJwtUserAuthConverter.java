@@ -15,7 +15,7 @@ import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticat
 import static gov.usgs.wma.mlrauthserver.config.WaterAuthJwtEnhancer.EMAIL_JWT_KEY;
 import gov.usgs.wma.mlrauthserver.model.WaterAuthUser;
 
-public class WaterAuthJwtUserAuthConverter extends DefaultUserAuthenticationConverter {	
+public class WaterAuthJwtUserAuthConverter extends DefaultUserAuthenticationConverter {
 	private static final Logger LOG = LoggerFactory.getLogger(WaterAuthJwtUserAuthConverter.class);
 
 	@Override

@@ -1,8 +1,6 @@
-package gov.usgs.wma.mlrauthserver.config;
+package gov.usgs.wma.mlrauthserver.config.local;
 
 import static org.junit.Assert.assertEquals;
-
-import javax.sql.DataSource;
 
 import org.junit.After;
 import org.junit.Before;
@@ -11,12 +9,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import gov.usgs.wma.mlrauthserver.dao.WaterAuthResourceIdAuthsDAO;
 
 @SpringBootTest
 @SpringBootConfiguration
@@ -25,16 +21,12 @@ import gov.usgs.wma.mlrauthserver.dao.WaterAuthResourceIdAuthsDAO;
 		"security.jwt.key-store=classpath:mytest.jks", 
 		"security.jwt.key-store-oauth-key=jwttestkey",
 		"security.jwt.key-store-password=mypass", })
-@ContextConfiguration(classes = { JwtConfig.class })
-public class JwtConfigTest {
-
-    @MockBean
-    WaterAuthResourceIdAuthsDAO authDao;
-    @MockBean
-    DataSource dataSource;
+@ContextConfiguration(classes = { LocalJwtConfig.class })
+@ActiveProfiles(profiles = "localDev")
+public class LocalJwtConfigTest {
 
 	@Autowired
-	private JwtConfig localJwtConfig;
+	private LocalJwtConfig localJwtConfig;
 
 	@Before
 	public void setUp() throws Exception {
