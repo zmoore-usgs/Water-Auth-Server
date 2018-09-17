@@ -4,7 +4,6 @@ import gov.usgs.wma.mlrauthserver.model.WaterAuthUser;
 import gov.usgs.wma.mlrauthserver.util.SAMLUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
