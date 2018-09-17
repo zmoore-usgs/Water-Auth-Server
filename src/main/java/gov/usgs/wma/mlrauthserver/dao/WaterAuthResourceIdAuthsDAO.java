@@ -45,11 +45,8 @@ public class WaterAuthResourceIdAuthsDAO {
         Set<String> resultSet = new HashSet<>();
         for(String resourceId : resourceIds) {
             Set<String> result = getAuthListForResourceId(resourceId);
-            // If any of our resource IDs has no entry in the auth list table then return null because we need all auths
-            if(result != null) {
+            if(result != null && !result.isEmpty()) {
                 resultSet.addAll(result);
-            } else {
-                return null;
             }
         }
         return resultSet;

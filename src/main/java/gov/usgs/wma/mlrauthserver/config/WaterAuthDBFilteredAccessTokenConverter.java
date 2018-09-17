@@ -1,7 +1,9 @@
 package gov.usgs.wma.mlrauthserver.config;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,40 +27,53 @@ public class WaterAuthDBFilteredAccessTokenConverter extends DefaultAccessTokenC
 
     @Override
     public Map<String, ?> convertAccessToken(OAuth2AccessToken token, OAuth2Authentication authentication) {
-        // Build default token map
-        Map<String, ?> defaultTokenMap = super.convertAccessToken(token, authentication);
         Map<String, Object> returnMap = new HashMap<>();
+        Map<String, ?> defaultTokenMap = super.convertAccessToken(token, authentication);
+        Set<String> defaultAuthSet = getAuthSetFromTokenMap(defaultTokenMap);
+        
+        // Build initial token map
         returnMap.putAll(defaultTokenMap);
-        
-        // Fetch included Auth Set for resource IDs
-        Set<String> filterAuths = authDao.getAuthListForResourceIdList(authentication.getOAuth2Request().getResourceIds());
-        
-        // Only do filtering if the resourceIDs are all present in the resourceId-auth filter table
-        if(filterAuths != null) {
-            // Filter user authorizations to only those in the include list
-            if(!filterAuths.isEmpty()) {
-                try {
-                    Set<?> objectSet = Set.class.cast(returnMap.get(AUTHORITIES));
-                    Set<String> authSet = objectSet.stream().map(o -> (String) o).collect(Collectors.toSet());
-                    Set<String> filteredAuthSet = new HashSet<>();
-                    for(String auth : authSet) {
-                        if(filterAuths.contains(auth)) {
-                            filteredAuthSet.add(auth);
-                        }
+        returnMap.put(AUTHORITIES, new HashSet<>());
+
+        // Only filter Auths if User has any Auths to filter
+        if(!defaultAuthSet.isEmpty()) {
+            Set<String> filterAuths = authDao.getAuthListForResourceIdList(authentication.getOAuth2Request().getResourceIds());
+
+            // Only do filtering if the resourceIDs are all present in the resourceId-auth filter table
+            if(filterAuths != null && !filterAuths.isEmpty()) {
+                // Filter user authorizations to only those in the include list
+                Set<String> filteredAuthSet = new HashSet<>();
+                for(String auth : defaultAuthSet) {
+                    if(filterAuths.contains(auth)) {
+                        filteredAuthSet.add(auth);
                     }
-                    returnMap.put(AUTHORITIES, filteredAuthSet);
-                } catch(ClassCastException c) {
-                    LOG.error("Unable to cast token authorities to String Set for modification. Error: " + c.getMessage());
-                    throw(c);
-                } catch(Exception e) {
-                    LOG.error("An unexpected error occurred while trying to filter user authorities. Error: " + e.getMessage());
-                    throw(e);
                 }
-            } else {
-                returnMap.put(AUTHORITIES, new HashSet<>());
+                returnMap.put(AUTHORITIES, filteredAuthSet);
             }
         }
 
         return returnMap;
+    }
+
+    protected Set<String> getAuthSetFromTokenMap(Map<String, ?> tokenMap) {
+        Set<String> returnSet = new HashSet<>();
+
+        if(tokenMap.get(AUTHORITIES) != null) {
+            try {
+                Collection<?> objectCollection = Collection.class.cast(tokenMap.get(AUTHORITIES));
+
+                if(!objectCollection.isEmpty()) {
+                    returnSet = objectCollection.stream().map(o -> o.toString()).collect(Collectors.toSet());
+                }
+            } catch(ClassCastException c) {
+                LOG.error("Unable to cast token authorities to a Collection for modification. Error: " + c.getMessage());
+                throw(c);
+            } catch(Exception e) {
+                LOG.error("An unexpected error occurred while trying to read token authorities. Error: " + e.getMessage());
+                throw(e);
+            }
+        }
+
+        return returnSet;
     }
 }

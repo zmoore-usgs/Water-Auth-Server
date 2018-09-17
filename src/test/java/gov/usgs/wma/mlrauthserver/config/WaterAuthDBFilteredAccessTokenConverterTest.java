@@ -9,10 +9,12 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -129,8 +132,7 @@ public class WaterAuthDBFilteredAccessTokenConverterTest {
             }
         }
         assertEquals(((Set<?>)defaultResult.get("authorities")).size(), 5);
-        assertEquals(((Set<?>)result.get("authorities")).size(), 5);
-        assertThat((Set<?>)result.get("authorities"), containsInAnyOrder("group1", "group2", "group3", "group4", "group5"));
+        assertEquals(((Set<?>)result.get("authorities")).size(), 0);
     }
 
     @SuppressWarnings("unchecked")
@@ -149,5 +151,47 @@ public class WaterAuthDBFilteredAccessTokenConverterTest {
         assertEquals(((Set<?>)defaultResult.get("authorities")).size(), 5);
         assertEquals(((Set<?>)result.get("authorities")).size(), 1);
         assertThat((Set<?>)result.get("authorities"), containsInAnyOrder("group2"));
+    }
+
+    @Test
+    public void getAuthSetFromTokenMapTest1() {
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("authorities", new HashSet<String>(Arrays.asList("group1", "group2")));
+        Set<String> result = converter.getAuthSetFromTokenMap(map);
+        assertEquals(result.size(), 2);
+        assertThat(result, containsInAnyOrder("group1", "group2"));
+
+        map = new HashMap<>();
+        map.put("authorities", Arrays.asList("group1", "group2"));
+        result = converter.getAuthSetFromTokenMap(map);
+        assertEquals(result.size(), 2);
+        assertThat(result, containsInAnyOrder("group1", "group2"));
+
+        map = new HashMap<>();
+        Stack<String> stack = new Stack<String>();
+        stack.addAll(Arrays.asList("group1", "group2"));
+        map.put("authorities", stack);
+        result = converter.getAuthSetFromTokenMap(map);
+        assertEquals(result.size(), 2);
+        assertThat(result, containsInAnyOrder("group1", "group2"));
+
+        map = new HashMap<>();
+        map.put("authorities", AuthorityUtils.authorityListToSet(fullUserAuthorityList));
+        result = converter.getAuthSetFromTokenMap(map);
+        assertEquals(result.size(), 5);
+        assertThat(result, containsInAnyOrder("group1", "group2", "group3", "group4", "group5"));
+    }
+
+    @Test
+    public void getAuthSetFromTokenMapTest2() {
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("authorities", new HashSet<>());
+        Set<String> result = converter.getAuthSetFromTokenMap(map);
+        assertEquals(result.size(), 0);
+
+        map = new HashMap<>();
+        map.put("authorities", null);
+        result = converter.getAuthSetFromTokenMap(map);
+        assertEquals(result.size(), 0);
     }
 }

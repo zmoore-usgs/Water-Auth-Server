@@ -101,7 +101,8 @@ public class WaterAuthResourceIdAuthsDAOTest {
         assertThat(result, containsInAnyOrder("group1", "group2", "group3"));
 
         result = authDao.getAuthListForResourceIdList(new HashSet<>(Arrays.asList("test1", "test2", "test3", "test4", "test5")));
-        assertTrue(result == null);
+        assertEquals(result.size(), 3);
+        assertThat(result, containsInAnyOrder("group1", "group2", "group3"));
 
         result = authDao.getAuthListForResourceIdList(new HashSet<>(Arrays.asList("test2")));
         assertEquals(result.size(), 1);
@@ -116,7 +117,8 @@ public class WaterAuthResourceIdAuthsDAOTest {
         assertThat(result, containsInAnyOrder("group1"));
 
         result = authDao.getAuthListForResourceIdList(new HashSet<>(Arrays.asList("test2", "test3", "test4", "test5")));
-        assertTrue(result == null);
+        assertEquals(result.size(), 1);
+        assertThat(result, containsInAnyOrder("group1"));
 
         result = authDao.getAuthListForResourceIdList(new HashSet<>(Arrays.asList("test3")));
         assertEquals(result.size(), 0);
@@ -125,22 +127,24 @@ public class WaterAuthResourceIdAuthsDAOTest {
         assertEquals(result.size(), 0);
 
         result = authDao.getAuthListForResourceIdList(new HashSet<>(Arrays.asList("test3", "test4", "test5")));
-        assertTrue(result == null);
+        assertEquals(result.size(), 0);
 
         result = authDao.getAuthListForResourceIdList(new HashSet<>(Arrays.asList("test4")));
         assertEquals(result.size(), 0);
 
         result = authDao.getAuthListForResourceIdList(new HashSet<>(Arrays.asList("test4", "test5")));
-        assertTrue(result == null);
+        assertEquals(result.size(), 0);
 
         result = authDao.getAuthListForResourceIdList(new HashSet<>(Arrays.asList("test5")));
-        assertTrue(result == null);
+        assertEquals(result.size(), 0);
 
         result = authDao.getAuthListForResourceIdList(new HashSet<>(Arrays.asList("test5", "test1")));
-        assertTrue(result == null);
+        assertEquals(result.size(), 3);
+        assertThat(result, containsInAnyOrder("group1", "group2", "group3"));
 
         result = authDao.getAuthListForResourceIdList(new HashSet<>(Arrays.asList("test2", "test5", "test1")));
-        assertTrue(result == null);
+        assertEquals(result.size(), 3);
+        assertThat(result, containsInAnyOrder("group1", "group2", "group3"));
         
         result = authDao.getAuthListForResourceIdList(new HashSet<>(Arrays.asList("test4", "test2")));
         assertEquals(result.size(), 1);
