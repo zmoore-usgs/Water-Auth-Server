@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Updated
-- isuftin@usgs.gov - Using Spring Boot 1.5.8-RELEASE
+- isuftin@usgs.gov - Using Spring Boot 1.5.9-RELEASE
 - isuftin@usgs.gov - Parameterized driverClassName in PersistenceConfig to allow for H2 driver
 during unit testing. Defaulting to com.mysql.jdbc.Driver
 
