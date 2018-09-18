@@ -157,6 +157,12 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Value("${server.routing.login-error}")
 	private String loginErrorTargetUrl;
 
+	//Logging Configuration
+	@Value("${security.saml.logging.messages:false}")
+	private Boolean logMessages;
+	@Value("${security.saml.logging.errors:true}")
+	private Boolean logErrors;
+
 	private Timer metadataTimer;
 	private MultiThreadedHttpConnectionManager multiThreadedHttpConnectionManager;
 
@@ -255,8 +261,8 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public SAMLDefaultLogger samlLogger() {
 		SAMLDefaultLogger logger = new SAMLDefaultLogger();
-		logger.setLogMessages(true);
-		logger.setLogErrors(true);
+		logger.setLogMessages(this.logMessages);
+		logger.setLogErrors(this.logErrors);
 		return logger;
 	}
 

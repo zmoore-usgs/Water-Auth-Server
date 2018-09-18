@@ -17,3 +17,8 @@ create table if not exists oauth_client_details (
 create table if not exists oauth_code (
   code VARCHAR(255), authentication BLOB
 );
+
+create table if not exists oauth_resource_id_auths (
+	resource_id VARCHAR(256) PRIMARY KEY,
+	authorities VARCHAR(4096)
+)
