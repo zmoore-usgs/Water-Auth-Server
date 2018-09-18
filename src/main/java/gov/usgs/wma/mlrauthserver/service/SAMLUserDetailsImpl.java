@@ -51,7 +51,7 @@ public class SAMLUserDetailsImpl implements SAMLUserDetailsService  {
 	//Generate authorities based on saml assertions
 	protected List<GrantedAuthority> addAuthorities(Map<String, List<String>> attributeMap) {
 		List<GrantedAuthority> authorityList = new ArrayList<>();
-		List<String> groupList = null;
+		List<String> groupList;
 
 		try {
 			groupList = SAMLUtils.getFirstMatchingAttributeValue(attributeMap, this.samlGroupAttributeNames);

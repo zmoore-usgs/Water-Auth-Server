@@ -21,6 +21,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 import gov.usgs.wma.mlrauthserver.config.WaterAuthJwtUserAuthConverter;
+import gov.usgs.wma.mlrauthserver.util.ClasspathUtils;
 
 @Configuration
 @Profile("localDev")
@@ -43,16 +44,7 @@ public class LocalJwtConfig {
 
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
-		Resource storeFile;
-
-		if(this.keystorePath.toLowerCase().startsWith("classpath:")){
-			DefaultResourceLoader loader = new DefaultResourceLoader();
-			String classpathLocation = this.keystorePath.replaceFirst("classpath:", "");
-			storeFile = loader.getResource(classpathLocation);
-		} else {
-			FileSystemResourceLoader loader = new FileSystemResourceLoader();
-			storeFile = loader.getResource(this.keystorePath);
-		}
+		Resource storeFile = ClasspathUtils.loadFromFileOrClasspath(this.keystorePath);
 		KeyStoreKeyFactory keyStoreKeyFactory =
 				new KeyStoreKeyFactory(storeFile,this.keystorePassword.toCharArray());
 
@@ -74,7 +66,7 @@ public class LocalJwtConfig {
 		defaultTokenServices.setTokenStore(tokenStore());
 		defaultTokenServices.setSupportRefreshToken(true);
 		TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
-		tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer, accessTokenConverter()));
+		tokenEnhancerChain.setTokenEnhancers(Arrays.asList(this.tokenEnhancer, accessTokenConverter()));
 		defaultTokenServices.setTokenEnhancer(tokenEnhancerChain);
 
 		return defaultTokenServices;
