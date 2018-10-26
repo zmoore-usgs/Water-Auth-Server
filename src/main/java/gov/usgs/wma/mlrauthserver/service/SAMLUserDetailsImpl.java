@@ -39,8 +39,8 @@ public class SAMLUserDetailsImpl implements SAMLUserDetailsService  {
 		Map<String, List<String>> attributeMap = SAMLUtils.getAttributeValueMap(credential);
 
 		try {
-			String email = SAMLUtils.getFirstMatchingAttributeValue(attributeMap, this.samlEmailAttributeNames).get(0);
-			String username = SAMLUtils.getFirstMatchingAttributeValue(attributeMap, this.samlUsernameAttributeNames).get(0);
+			String email = SAMLUtils.getFirstMatchingAttributeValueList(attributeMap, this.samlEmailAttributeNames).get(0);
+			String username = SAMLUtils.getFirstMatchingAttributeValueList(attributeMap, this.samlUsernameAttributeNames).get(0);
 			LOG.debug(username + " (" + email + ") logged in.");
 			return new WaterAuthUser(username, email, addAuthorities(attributeMap));
 		} catch(RuntimeException e) {
@@ -51,10 +51,10 @@ public class SAMLUserDetailsImpl implements SAMLUserDetailsService  {
 	//Generate authorities based on saml assertions
 	protected List<GrantedAuthority> addAuthorities(Map<String, List<String>> attributeMap) {
 		List<GrantedAuthority> authorityList = new ArrayList<>();
-		List<String> groupList = null;
+		List<String> groupList;
 
 		try {
-			groupList = SAMLUtils.getFirstMatchingAttributeValue(attributeMap, this.samlGroupAttributeNames);
+			groupList = SAMLUtils.getFirstMatchingAttributeValueList(attributeMap, this.samlGroupAttributeNames);
 		} catch (RuntimeException e) {
 			LOG.warn("No group information found in SAML response. Caused By: " + e.getMessage());
 			return authorityList;

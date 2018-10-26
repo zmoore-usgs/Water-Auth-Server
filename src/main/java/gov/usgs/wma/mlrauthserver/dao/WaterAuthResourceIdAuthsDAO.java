@@ -23,7 +23,7 @@ public class WaterAuthResourceIdAuthsDAO {
     public Set<String> getAuthListForResourceId(String resourceId) {
         Set<String> returnSet = null;
         try {
-            String authsString = jdbcTemplate.queryForObject("SELECT authorities FROM oauth_resource_id_auths WHERE resource_id = ?", 
+            String authsString = this.jdbcTemplate.queryForObject("SELECT authorities FROM oauth_resource_id_auths WHERE resource_id = ?", 
             new Object[]{resourceId}, String.class);
             
             returnSet = new HashSet<>();

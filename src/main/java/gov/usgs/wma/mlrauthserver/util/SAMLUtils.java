@@ -48,7 +48,7 @@ public class SAMLUtils {
 		return returnVal;
 	}
 
-	public static List<String> getFirstMatchingAttributeValue(Map<String, List<String>> attributeMap, String[] keyList) {
+	public static List<String> getFirstMatchingAttributeValueList(Map<String, List<String>> attributeMap, String[] keyList) {
 		List<String> matched = new ArrayList<>();
 		for(String key : keyList) {
 			List<String> value = attributeMap.get(key);

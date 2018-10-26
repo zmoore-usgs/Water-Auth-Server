@@ -17,7 +17,7 @@ import gov.usgs.wma.mlrauthserver.dao.WaterAuthResourceIdAuthsDAO;
 
 public class WaterAuthDBFilteredAccessTokenConverter extends DefaultAccessTokenConverter {
     private static final Logger LOG = LoggerFactory.getLogger(WaterAuthDBFilteredAccessTokenConverter.class);
-    private WaterAuthResourceIdAuthsDAO authDao;
+    private final WaterAuthResourceIdAuthsDAO authDao;
     
     public WaterAuthDBFilteredAccessTokenConverter(WaterAuthResourceIdAuthsDAO authDao) {
         super();
@@ -54,7 +54,7 @@ public class WaterAuthDBFilteredAccessTokenConverter extends DefaultAccessTokenC
         return returnMap;
     }
 
-    protected Set<String> getAuthSetFromTokenMap(Map<String, ?> tokenMap) {
+    public static Set<String> getAuthSetFromTokenMap(Map<String, ?> tokenMap) {
         Set<String> returnSet = new HashSet<>();
 
         if(tokenMap.get(AUTHORITIES) != null) {
