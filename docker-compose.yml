@@ -1,0 +1,32 @@
+---
+  version: '3.6'
+
+  secrets:
+    tomcat_ssl_crt:
+      file: ./docker/certificates/tomcat/tomcat-wildcard-dev.crt
+    tomcat_ssl_key:
+      file: ./docker/certificates/tomcat/tomcat-wildcard-dev.key
+    oauth_sign_crt:
+      file: ./docker/certificates/oauth2/oauth2-wildcard-dev.crt
+    oauth_sign_key:
+      file: ./docker/certificates/oauth2/oauth2-wildcard-dev.key
+
+  services:
+    waterauth:
+      container_name: waterauth
+      build: .
+      image: water-auth-server
+      ports:
+        - "8443:8443"
+      secrets:
+        - source: tomcat_ssl_crt
+          target: /home/spring/tomcat-wildcard-ssl.crt
+        - source: tomcat_ssl_key
+          target: /home/spring/tomcat-wildcard-ssl.key
+        - source: oauth_sign_crt
+          target: /home/spring/oauth-wildcard-sign.crt
+        - source: oauth_sign_key
+          target: /home/spring/oauth-wildcard-sign.key
+      env_file:
+        - docker/config.env
+        - docker/secrets.env

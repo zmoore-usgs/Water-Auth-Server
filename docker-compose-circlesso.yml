@@ -1,0 +1,65 @@
+---
+  version: '3.6'
+
+  networks:
+    water_auth:
+
+  secrets:
+    tomcat_ssl_crt:
+      file: ./docker/certificates/tomcat/tomcat-wildcard-dev.crt
+    tomcat_ssl_key:
+      file: ./docker/certificates/tomcat/tomcat-wildcard-dev.key
+    oauth_sign_crt:
+      file: ./docker/certificates/oauth2/oauth2-wildcard-dev.crt
+    oauth_sign_key:
+      file: ./docker/certificates/oauth2/oauth2-wildcard-dev.key
+    saml_sign_crt:
+      file: ./docker/certificates/saml/saml-wildcard-dev.crt
+    saml_sign_key:
+      file: ./docker/certificates/saml/saml-wildcard-dev.key
+
+  services:
+    database:
+      container_name: database
+      image: mysql:5
+      ports:
+        - "3306:3306"
+      entrypoint: ['/entrypoint.sh', '--default-authentication-plugin=mysql_native_password']
+      networks:
+        water_auth:
+          aliases:
+            - container.database.docker
+      environment:
+        - MYSQL_ROOT_PASSWORD=changeMe
+        - MYSQL_USER=mysqluser
+        - MYSQL_PASSWORD=changeMe
+        - MYSQL_DATABASE=waterauth
+
+    server:
+      container_name: waterauth
+      build: .
+      image: water-auth-server
+      ports:
+        - "8443:8443"
+      networks:
+        water_auth:
+          aliases:
+            - water_auth_server
+      depends_on:
+        - database
+      secrets:
+        - source: tomcat_ssl_crt
+          target: /home/spring/tomcat-wildcard-ssl.crt
+        - source: tomcat_ssl_key
+          target: /home/spring/tomcat-wildcard-ssl.key
+        - source: oauth_sign_crt
+          target: /home/spring/oauth-wildcard-sign.crt
+        - source: oauth_sign_key
+          target: /home/spring/oauth-wildcard-sign.key
+        - source: saml_sign_crt
+          target: /home/spring/saml-wildcard-sign.crt
+        - source: saml_sign_key
+          target: /home/spring/saml-wildcard-sign.key
+      env_file:
+        - docker/circlesso-config.env
+        - docker/circlesso-secrets.env

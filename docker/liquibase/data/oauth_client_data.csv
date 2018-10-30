@@ -1,0 +1,2 @@
+"client_id","resource_ids","client_secret","scope","authorized_grant_types","web_server_redirect_uri","authorities","access_token_validity","refresh_token_validity","additional_information","autoapprove"
+"example_client_id_1","example_resource_ids_1","I am a client secret1","read","authorization_code,refresh_token","https://some-server.gov/wsgi/ui/authorizez","","86400","2592000","","True"

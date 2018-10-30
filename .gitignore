@@ -8,4 +8,5 @@
 **/metadata/*.xml
 **/*.p12
 **/*.crt
+!**/*-wildcard-dev.crt
 /application.yml
