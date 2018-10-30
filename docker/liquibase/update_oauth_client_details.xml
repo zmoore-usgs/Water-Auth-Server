@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd"
+  logicalFilePath="liquibase_change_set/update_oauth_client_details.xml">
+  
+  <preConditions>
+    <dbms type="mysql"/>
+    <tableExists schemaName="waterauth" tableName="oauth_client_details"/>
+  </preConditions>
+
+  <changeSet id="oauth_client_details" author="owi-devops@usgs.gov" runOnChange="true" failOnError="true">
+    <comment>Adds or updates oauth_client_details table with csv data</comment>
+    <loadUpdateData encoding="UTF-8" file="data/oauth_client_data.csv" primaryKey="client_id" quotchar="&quot;" schemaName="waterauth" separator="," tableName="oauth_client_details">
+      <column header="client_id" name="client_id" type="STRING"/>
+      <column header="resource_ids" name="resource_ids" type="STRING"/>
+      <column header="client_secret" name="client_secret" type="STRING"/>
+      <column header="scope" name="scope" type="STRING"/>
+      <column header="authorized_grant_types" name="authorized_grant_types" type="STRING"/>
+      <column header="web_server_redirect_uri" name="web_server_redirect_uri" type="STRING"/>
+      <column header="authorities" name="authorities" type="STRING"/>
+      <column header="access_token_validity" name="access_token_validity" type="NUMERIC"/>
+      <column header="refresh_token_validity" name="refresh_token_validity" type="NUMERIC"/>
+      <column header="additional_information" name="additional_information" type="STRING"/>
+      <column header="autoapprove" name="autoapprove" type="STRING"/>
+    </loadUpdateData>
+  </changeSet>
+</databaseChangeLog>

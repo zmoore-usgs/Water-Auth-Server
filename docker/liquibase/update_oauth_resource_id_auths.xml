@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd"
+  logicalFilePath="liquibase_change_set/update_oauth_resource_id_auths.xml">
+
+  <preConditions>
+    <dbms type="mysql"/>
+    <tableExists schemaName="waterauth" tableName="oauth_resource_id_auths"/>
+  </preConditions>
+
+  <changeSet id="oauth_resource_id_auths" author="owi-devops@usgs.gov" runOnChange="true" failOnError="true">
+    <comment>Adds or updates oauth_resource_id_auths table with csv data</comment>
+    <loadUpdateData encoding="UTF-8" file="data/oauth_resource_id_auths.csv" primaryKey="resource_id" quotchar="&quot;" schemaName="waterauth" separator="," tableName="oauth_resource_id_auths">
+      <column header="resource_id" name="resource_id" type="STRING"/>
+      <column header="authorities" name="authorities" type="STRING"/>
+    </loadUpdateData>
+  </changeSet>
+</databaseChangeLog>
