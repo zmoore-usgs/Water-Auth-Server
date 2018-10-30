@@ -1,4 +1,9 @@
-FROM maven:3-jdk-8-slim AS build
+FROM maven@sha256:b37da91062d450f3c11c619187f0207bbb497fc89d265a46bbc6dc5f17c02a2b AS build
+# The above is a temporary fix
+# See:
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=911925
+# https://github.com/carlossg/docker-maven/issues/92
+# FROM maven:3-jdk-8-slim AS build
 
 COPY pom.xml /build/pom.xml
 WORKDIR /build
