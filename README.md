@@ -16,7 +16,7 @@ server:
 ```
 
 ### Creating a Keystore
-As further disucssed in the `Keystore` section below this application uses a keystore and several different keys for various parts of its operation. In order to run this application locally a keystore will need to be provided. This keystore should contain 3 keys:
+As further discussed in the `Keystore` section below this application uses a keystore and several different keys for various parts of its operation. In order to run this application locally a keystore will need to be provided. This keystore should contain 3 keys:
 - A key for the embedded tomcat server to serve over https
     - Defined in environment variable: `keystoreSSLKey` 
         - Default value is: `tomcat`
