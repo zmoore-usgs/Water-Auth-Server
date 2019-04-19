@@ -28,7 +28,7 @@ This utility can be used to emulate the second half of this process locally usin
 
 3. Examine the network requests in the DevTools window for an entry performing a POST to `https://auth.nwis.usgs.gov/saml/SSO`. If you examine the parameters sent with that request you should see an entry called `SAMLResponse` with a big block of text. This is the base64-encoded SAML AuthNResponse sent from DOI AD to Water Auth.
 
-4. Copy the SAMLResponse value, not including the parameter name I.E: Everything after '`SAMLResponse=`' and save it in a file. 
+4. Copy the SAMLResponse value, not including the parameter name I.E: Everything after '`SAMLResponse=`' and save it in a file (ex: `saml_response.txt`). 
 
 5. Currently the SAMLResponse is URL and Base64 encoded so we need to decode it back to XML. This can be done using the included `decode_saml.sh` utility. This utility expects two arguments:
     1. The path to the file in which you saved the `SAMLResponse` value.
@@ -43,13 +43,13 @@ This utility can be used to emulate the second half of this process locally usin
 
 7. Open the decoded SAML XML into a text editor, preferably one that supports pretty-printing XML (although you could also use another tool to do this safely at this point because the sensitive data is still encrypted).
 
-8. Copy the value of `EncryptedAssertion --> EncryptedData --> KeyInfo --> EncryptedKey --> CipherData --> CipherValue` into a file.
+8. Copy the value of `EncryptedAssertion --> EncryptedData --> KeyInfo --> EncryptedKey --> CipherData --> CipherValue` into a file (ex: `enc_key.txt`).
 
-9. Copy the value of `EncryptedAssertion --> EncryptedData --> CipherData --> CipherValue` into a file.
+9. Copy the value of `EncryptedAssertion --> EncryptedData --> CipherData --> CipherValue` into a file (ex: `enc_data.txt`).
 
-10. Retrieve a copy of the Water Auth SAML Private Key file. This is stored in S3. Ask another developer for the location of the key in S3 if you do not know.
+10. Retrieve a copy of the Water Auth SAML Private Key file (ex: `saml.key`). This is stored in S3. Ask another developer for the location of the key in S3 if you do not know.
 
-11. You can now run the `decrypt_saml.sh` script using the files created in steps 8, 9, and 10 to decrypt the `EncryptedAssertion` value and view the contents. 
+11. You can now run the `decrypt_saml.sh` script using the files created in steps 8, 9, and 10 to decrypt the `EncryptedAssertion` value and view the contents.
 
     Example execution (`saml.key`: Step 10, `enc_data.txt`: Step 9, `enc_key.txt`: Step 8): 
 
