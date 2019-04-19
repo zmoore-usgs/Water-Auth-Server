@@ -10,3 +10,8 @@
 **/*.crt
 !**/*-wildcard-dev.crt
 /application.yml
+/util/*.xml
+/util/*.bin
+/util/*.dec
+/util/*.txt
+/util/*.key
