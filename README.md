@@ -161,6 +161,10 @@ These URLs are primarily used internally by the Spring Authentication Manager, r
 
 - **samlMetadataEndpoint** - [Default: /metadata] The metadata sub-endpoint to use for retrieving the metadata for the application which can be loaded into the IDP server or used to verify that the other SAML settings have been applied properly.
 
+## Debugging SAML Responses
+
+View the README.md in the `util` subdirectory of this project.
+
 ## Docker
 
 This project is configured to work with docker. Each relevant environemnt variable should be converted from the `application.yml` file to a `--env` command on a new docker service. The built JAR will be fetched from the MLR Artifactory when the image is built. The version of the JAR to grab must be passed as a build argument with: `mlr_version`
