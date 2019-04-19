@@ -51,6 +51,6 @@ This utility can be used to emulate the second half of this process locally usin
 
 11. You can now run the `decrypt_saml.sh` script using the files created in steps 8, 9, and 10 to decrypt the `EncryptedAssertion` value and view the contents. 
 
-    Example exectuion (`saml.key`: Step 10, `enc_data.txt`: Step 9, `enc_key.txt`: Step 8): 
+    Example execution (`saml.key`: Step 10, `enc_data.txt`: Step 9, `enc_key.txt`: Step 8): 
 
     `./decrypt_saml.sh enc_key.txt enc_data.txt saml.key decrypted_assertion.xml`
