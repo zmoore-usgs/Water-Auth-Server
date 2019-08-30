@@ -9,7 +9,8 @@ import org.opensaml.saml2.core.Attribute;
 import org.opensaml.xml.XMLObject;
 import org.opensaml.xml.schema.XSString;
 import org.opensaml.xml.schema.impl.XSAnyImpl;
-
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.saml.SAMLCredential;
 
 public class SAMLUtils {
@@ -48,7 +49,7 @@ public class SAMLUtils {
 		return returnVal;
 	}
 
-	public static List<String> getFirstMatchingAttributeValueList(Map<String, List<String>> attributeMap, String[] keyList) {
+	public static List<String> getFirstMatchingAttributeValueList(Map<String, List<String>> attributeMap, String[] keyList, Boolean required) {
 		List<String> matched = new ArrayList<>();
 		for(String key : keyList) {
 			List<String> value = attributeMap.get(key);
@@ -58,6 +59,10 @@ public class SAMLUtils {
 				}
 				matched.add(key);
 			}
+		}
+
+		if(!required) {
+			return new ArrayList<>();
 		}
 
 		String errorText;
@@ -70,5 +75,28 @@ public class SAMLUtils {
 		}
 		
 		throw new RuntimeException(errorText);
+	}
+
+	public static String getFirstMatchingAttributeFirstValue(Map<String, List<String>> attributeMap, String[] keyList, Boolean required) {
+		List<String> attributeValueList = getFirstMatchingAttributeValueList(attributeMap, keyList, required);
+
+		if(attributeValueList.size() > 0) {
+			return attributeValueList.get(0);
+		}
+
+		return null;
+	}
+
+	public static List<GrantedAuthority> groupsToAuthoritiesList(Map<String, List<String>> attributeMap, String[] keyList) {
+		List<GrantedAuthority> authorityList = new ArrayList<>();
+		List<String> groupList;
+
+		groupList = getFirstMatchingAttributeValueList(attributeMap, keyList, false);
+
+		for(String group : groupList){
+			authorityList.add(new SimpleGrantedAuthority(group));
+		}
+		
+		return authorityList;
 	}
 }

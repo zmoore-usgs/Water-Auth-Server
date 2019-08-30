@@ -43,7 +43,7 @@ during unit testing. Defaulting to com.mysql.jdbc.Driver
     - Default Endpoints: `/` (Login Success), `/out` (Logout Success), `/auth-error` (Error during Authentication Process)
 
 - Configurable mapping of key values from the SAML Response to the generated OAuth2 JWT Token
-    - OAuth2 Authroizations: Maps SAML Assertion values with the key `$samlGroupAttributeName` to the `authorizations` list of the OAuth2 token.
+    - OAuth2 Authroizations: Maps SAML Assertion values with the key `$samlGroupAttributeNames` to the `authorizations` list of the OAuth2 token.
     - Principal name: Maps the SAML Assertion value with the key `$samlUsernameAttributeName` to the principal name of the Spring Security context and the `user_name` field of the JWT token.
     - User Email: Maps the SAML Assertion value with the key `$samlEmailAttributeName` to the `email` field of the JWT token and an `email` extension within the OAuth2 Spring Security context.
 

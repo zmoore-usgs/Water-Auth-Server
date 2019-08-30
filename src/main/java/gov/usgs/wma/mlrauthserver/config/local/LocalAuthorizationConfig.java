@@ -55,8 +55,7 @@ public class LocalAuthorizationConfig extends AuthorizationServerConfigurerAdapt
 			.authorizedGrantTypes(localGrantTypes)
 			.scopes(localScopes)
 			.secret(localSecret)
-			.autoApprove(true)
-			;
+			.autoApprove(true);
 	}
 
 	@Override
@@ -68,5 +67,4 @@ public class LocalAuthorizationConfig extends AuthorizationServerConfigurerAdapt
 			.tokenStore(tokenStore)
 			.accessTokenConverter(accessTokenConverter);
 	}
-
 }

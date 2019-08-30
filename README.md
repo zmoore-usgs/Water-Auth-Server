@@ -96,11 +96,13 @@ The authentication request sent from the application to the SAML IDP server can 
 ### SAML Attribute Mapping
 In addition to logging the user in through SAML this service also acts as an Oauth2 Authorization Server and converts some of the returned SAML assertions into Oauth2 authorizations. The following environment variables are used to do this mapping.
 
-- **samlGroupAttributeName** - [Default: `http://schemas.xmlsoap.org/claims/Group`] The SAML attribute key that corresponds to the groups that the user is part of. The values found attached to this key will be converted into authorizations in the Oauth2 token.
+- **samlGroupAttributeNames** - [Default: `http://schemas.xmlsoap.org/claims/Group`] The SAML attribute key that corresponds to the groups that the user is part of. The values found attached to this key will be converted into authorizations in the Oauth2 token.
 
-- **samlEmailAttributeName** - [Default: `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress`] The SAML attribute key that corresponds to the email address of the logged-in user. This value will be contained in the Oauth2 requests and JWTs as "email" in the JWT and within the Oauth2 Request Extensions.
+- **samlEmailAttributeNames** - [Default: `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress`] The SAML attribute key that corresponds to the email address of the logged-in user. This value will be contained in the Oauth2 requests and JWTs as "email" in the JWT and within the Oauth2 Request Extensions.
 
-- **samlUsernameAttributeName** - [Default: `http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname`] The SAML attribute key that corresponds to the username of the logged-in user. This value will be used as the principal value and name in the Spring Security Context and will be contained in the JWTs as "user_name".
+- **samlUsernameAttributeNames** - [Default: `http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname`] The SAML attribute key that corresponds to the username of the logged-in user. This value will be used as the principal value and name in the Spring Security Context and will be contained in the JWTs as "user_name".
+
+- **samlOfficeStateAttributeNames** - [Default: `state`] The SAML attribute key that corresponds to the office state code of the logged-in user. This value will be contained in the Oauth2 requests and JWTs as "officeState" within the "details" section in the JWT and within the Oauth2 Request Extensions.
 
 ### Keystore
 A keystore is used by the SAML service to ensure secure communication with the IDP server. Your keystore should contain the certs used on the IDP server as well as any certs required to reach your metadata XML if it is being supplied via http. The same keystore is also used by the Oauth2 portion of the application in order to sign JWT tokens.

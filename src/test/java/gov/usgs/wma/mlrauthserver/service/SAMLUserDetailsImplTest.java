@@ -1,17 +1,12 @@
 package gov.usgs.wma.mlrauthserver.service;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.BDDMockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.opensaml.saml2.core.Attribute;
 import org.opensaml.xml.schema.XSString;
@@ -33,10 +28,12 @@ import gov.usgs.wma.mlrauthserver.model.WaterAuthUser;
 @SpringBootConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestPropertySource(properties = { 
-		"security.saml.attribute-names.group=groupkey1,groupkey2", 
-		"security.saml.attribute-names.email=emailkey1",
-		"security.saml.attribute-names.username=usernamekey1"})
-@ContextConfiguration(classes = { SAMLUserDetailsImpl.class })
+    "security.saml.attribute-names.username=usernamekey1",
+    "security.saml.attribute-names.email=emailkey1",
+    "security.saml.attribute-names.group=groupkey1,groupkey2", 
+    "security.saml.attribute-names.details.office-state=statekey1,statekey2"
+})
+@ContextConfiguration(classes = { SAMLUserDetailsImpl.class, WaterAuthUserFactory.class })
 public class SAMLUserDetailsImplTest {
     @Autowired
     private SAMLUserDetailsImpl sAMLUserDetailsImpl;
@@ -44,50 +41,6 @@ public class SAMLUserDetailsImplTest {
     @Mock
     private SAMLCredential samlCredential;
     
-	@Test
-	public void addAuthoritiesTest() {
-        Map<String,List<String>> attrMap = new HashMap<>();
-        attrMap.put("groupkey1", Arrays.asList("group1","group2"));
-        List<GrantedAuthority> authorityList = sAMLUserDetailsImpl.addAuthorities(attrMap);
-        assertFalse(authorityList.isEmpty());
-        assertEquals(authorityList.size(), 2);
-        assertEquals(authorityList.get(0).getAuthority(), "group1");
-        assertEquals(authorityList.get(1).getAuthority(), "group2");
-
-        attrMap.clear();
-        attrMap.put("groupkey2", Arrays.asList("group1","group2"));
-        authorityList = sAMLUserDetailsImpl.addAuthorities(attrMap);
-        assertFalse(authorityList.isEmpty());
-        assertEquals(authorityList.size(), 2);
-        assertEquals(authorityList.get(0).getAuthority(), "group1");
-        assertEquals(authorityList.get(1).getAuthority(), "group2");
-
-        attrMap.clear();
-        attrMap.put("groupkey1", Arrays.asList("group1"));
-        attrMap.put("groupkey2", Arrays.asList("group2"));
-        authorityList = sAMLUserDetailsImpl.addAuthorities(attrMap);
-        assertFalse(authorityList.isEmpty());
-        assertEquals(authorityList.size(), 1);
-        assertEquals(authorityList.get(0).getAuthority(), "group1");
-
-        attrMap.clear();
-        attrMap.put("groupkey3", Arrays.asList("group1"));
-        attrMap.put("groupkey2", Arrays.asList("group2"));
-        authorityList = sAMLUserDetailsImpl.addAuthorities(attrMap);
-        assertFalse(authorityList.isEmpty());
-        assertEquals(authorityList.size(), 1);
-        assertEquals(authorityList.get(0).getAuthority(), "group2");
-
-        attrMap.clear();
-        authorityList = sAMLUserDetailsImpl.addAuthorities(attrMap);
-        assertTrue(authorityList.isEmpty());
-
-        attrMap.clear();
-        attrMap.put("groupkey3", Arrays.asList("group1"));
-        authorityList = sAMLUserDetailsImpl.addAuthorities(attrMap);
-        assertTrue(authorityList.isEmpty());
-    }
-
 	@Test
 	public void loadUserBySAMLTest1() {
         XSString attr1Val1 = mock(XSString.class);
@@ -100,6 +53,10 @@ public class SAMLUserDetailsImplTest {
         when(attr3Val1.getValue()).thenReturn("group1");
         XSString attr3Val2 = mock(XSString.class);
         when(attr3Val2.getValue()).thenReturn("group3");
+        XSString attr4Val1 = mock(XSString.class);
+        when(attr4Val1.getValue()).thenReturn("WI");
+        XSString attr4Val2 = mock(XSString.class);
+        when(attr4Val2.getValue()).thenReturn("MO");
         Attribute attr1 = mock(Attribute.class);
         when(attr1.getName()).thenReturn("emailkey1");
         when(attr1.getAttributeValues()).thenReturn(Arrays.asList(attr1Val1, attr1Val2));
@@ -109,16 +66,19 @@ public class SAMLUserDetailsImplTest {
         Attribute attr3 = mock(Attribute.class);
         when(attr3.getName()).thenReturn("groupkey1");
         when(attr3.getAttributeValues()).thenReturn(Arrays.asList(attr3Val1, attr3Val2));
+        Attribute attr4 = mock(Attribute.class);
+        when(attr4.getName()).thenReturn("statekey1");
+        when(attr4.getAttributeValues()).thenReturn(Arrays.asList(attr4Val1, attr4Val2));
         samlCredential = mock(SAMLCredential.class);
-        when(samlCredential.getAttributes()).thenReturn(Arrays.asList(attr1, attr2, attr3));
-        Object result = sAMLUserDetailsImpl.loadUserBySAML(samlCredential);
-        assertTrue(result instanceof WaterAuthUser);
-        assertEquals(((WaterAuthUser)result).getUsername(), "test1");
-        assertEquals(((WaterAuthUser)result).getEmail(), "test1@test.gov");
-        assertEquals(((WaterAuthUser)result).getPassword(), null);
-        assertEquals(((WaterAuthUser)result).getAuthorities().size(), 2);
-        assertEquals(((GrantedAuthority)((WaterAuthUser)result).getAuthorities().toArray()[0]).getAuthority(), "group1");
-        assertEquals(((GrantedAuthority)((WaterAuthUser)result).getAuthorities().toArray()[1]).getAuthority(), "group3");
+        when(samlCredential.getAttributes()).thenReturn(Arrays.asList(attr1, attr2, attr3, attr4));
+        WaterAuthUser result = sAMLUserDetailsImpl.loadUserBySAML(samlCredential);
+        assertEquals(result.getUsername(), "test1");
+        assertEquals(result.getEmail(), "test1@test.gov");
+        assertEquals(result.getDetails().getOfficeState(), "WI");
+        assertEquals(result.getPassword(), null);
+        assertEquals(result.getAuthorities().size(), 2);
+        assertEquals(((GrantedAuthority)result.getAuthorities().toArray()[0]).getAuthority(), "group1");
+        assertEquals(((GrantedAuthority)result.getAuthorities().toArray()[1]).getAuthority(), "group3");
     }
 
     @Test
@@ -129,6 +89,8 @@ public class SAMLUserDetailsImplTest {
         when(attr1Val2.getValue()).thenReturn("test2@test.gov");
         XSString attr2Val1 = mock(XSString.class);
         when(attr2Val1.getValue()).thenReturn("test1");
+        XSString attr4Val1 = mock(XSString.class);
+        when(attr4Val1.getValue()).thenReturn("WI");
         Attribute attr1 = mock(Attribute.class);
         when(attr1.getName()).thenReturn("emailkey1");
         when(attr1.getAttributeValues()).thenReturn(Arrays.asList(attr1Val1, attr1Val2));
@@ -138,14 +100,17 @@ public class SAMLUserDetailsImplTest {
         Attribute attr3 = mock(Attribute.class);
         when(attr3.getName()).thenReturn("groupkey1");
         when(attr3.getAttributeValues()).thenReturn(new ArrayList<>());
+        Attribute attr4 = mock(Attribute.class);
+        when(attr4.getName()).thenReturn("statekey2");
+        when(attr4.getAttributeValues()).thenReturn(Arrays.asList(attr4Val1));
         samlCredential = mock(SAMLCredential.class);
-        when(samlCredential.getAttributes()).thenReturn(Arrays.asList(attr1, attr2, attr3));
-        Object result = sAMLUserDetailsImpl.loadUserBySAML(samlCredential);
-        assertTrue(result instanceof WaterAuthUser);
-        assertEquals(((WaterAuthUser)result).getUsername(), "test1");
-        assertEquals(((WaterAuthUser)result).getEmail(), "test1@test.gov");
-        assertEquals(((WaterAuthUser)result).getPassword(), null);
-        assertEquals(((WaterAuthUser)result).getAuthorities().size(), 0);
+        when(samlCredential.getAttributes()).thenReturn(Arrays.asList(attr1, attr2, attr3, attr4));
+        WaterAuthUser result = sAMLUserDetailsImpl.loadUserBySAML(samlCredential);
+        assertEquals(result.getUsername(), "test1");
+        assertEquals(result.getEmail(), "test1@test.gov");
+        assertEquals(result.getDetails().getOfficeState(), "WI");
+        assertEquals(result.getPassword(), null);
+        assertEquals(result.getAuthorities().size(), 0);
     }
     
     @Test
@@ -171,13 +136,12 @@ public class SAMLUserDetailsImplTest {
         when(attr3.getAttributeValues()).thenReturn(Arrays.asList(attr3Val1, attr3Val2));
         samlCredential = mock(SAMLCredential.class);
         when(samlCredential.getAttributes()).thenReturn(Arrays.asList(attr1, attr2, attr3));
-        
-        Object result = sAMLUserDetailsImpl.loadUserBySAML(samlCredential);
-        assertTrue(result instanceof WaterAuthUser);
-        assertEquals(((WaterAuthUser)result).getUsername(), "test1");
-        assertEquals(((WaterAuthUser)result).getEmail(), "test1@test.gov");
-        assertEquals(((WaterAuthUser)result).getPassword(), null);
-        assertEquals(((WaterAuthUser)result).getAuthorities().size(), 0);
+        WaterAuthUser result = sAMLUserDetailsImpl.loadUserBySAML(samlCredential);
+        assertEquals(result.getUsername(), "test1");
+        assertEquals(result.getEmail(), "test1@test.gov");
+        assertEquals(result.getDetails().getOfficeState(), null);
+        assertEquals(result.getPassword(), null);
+        assertEquals(result.getAuthorities().size(), 0);
     }
 
     @Test

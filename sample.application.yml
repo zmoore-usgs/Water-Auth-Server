@@ -18,9 +18,10 @@ samlSSOEndpoint: /sso
 samlSSOHOKEndpoint: /ssohok
 samlMetadataEndpoint: /metadata
 
-samlGroupAttributeName: http://schemas.xmlsoap.org/claims/Group
-samlEmailAttributeName: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress
-samlUsernameAttributeName: http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname
+samlGroupAttributeNames: http://schemas.xmlsoap.org/claims/Group
+samlEmailAttributeNames: http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress
+samlUsernameAttributeNames: http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname
+samlOfficeStateAttributeNames: state
 
 serverPort: 8443
 

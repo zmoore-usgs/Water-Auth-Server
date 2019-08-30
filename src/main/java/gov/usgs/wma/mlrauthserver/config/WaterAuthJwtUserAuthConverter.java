@@ -13,7 +13,10 @@ import org.springframework.security.oauth2.common.exceptions.InvalidTokenExcepti
 import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
 
 import static gov.usgs.wma.mlrauthserver.config.WaterAuthJwtEnhancer.EMAIL_JWT_KEY;
+import static gov.usgs.wma.mlrauthserver.config.WaterAuthJwtEnhancer.DETAILS_JWT_KEY;
+
 import gov.usgs.wma.mlrauthserver.model.WaterAuthUser;
+import gov.usgs.wma.mlrauthserver.model.WaterAuthUserDetails;
 
 public class WaterAuthJwtUserAuthConverter extends DefaultUserAuthenticationConverter {
 	private static final Logger LOG = LoggerFactory.getLogger(WaterAuthJwtUserAuthConverter.class);
@@ -23,21 +26,23 @@ public class WaterAuthJwtUserAuthConverter extends DefaultUserAuthenticationConv
 		Authentication defaultAuth = super.extractAuthentication(map);
 
 		if(defaultAuth != null) {
-			String email = "";
-			String principal = "";
+			String username;
+			String email;
 			List<GrantedAuthority> authorities = new ArrayList<>();
+			WaterAuthUserDetails details;
 
 			try {
+				username = defaultAuth.getPrincipal().toString();
 				email = map.containsKey(EMAIL_JWT_KEY) ? (String)map.get(EMAIL_JWT_KEY) : "";
-				principal = defaultAuth.getPrincipal().toString();
 				authorities = new ArrayList<>(defaultAuth.getAuthorities());
+				details = map.containsKey(DETAILS_JWT_KEY) ? (WaterAuthUserDetails)map.get(DETAILS_JWT_KEY) : new WaterAuthUserDetails();
 			} catch (Exception e) {
 				LOG.error("Failed to convert recieved JWT token to a Water Auth User. Error: " + e.getMessage());
 				throw new InvalidTokenException("Failed to convert recieved JWT token to a Water Auth User.");
 			}
 
-			if(!email.isEmpty() && !principal.isEmpty()) {
-				WaterAuthUser user = new WaterAuthUser(principal, email, authorities);
+			if(!email.isEmpty() && !username.isEmpty()) {
+				WaterAuthUser user = new WaterAuthUser(username, email, authorities, details);
 				return new UsernamePasswordAuthenticationToken(user, "N/A", user.getAuthorities());
 			} else {
 				LOG.error("Failed to convert recieved JWT token to a Water Auth User. Error: Username or Email not present in the token.");

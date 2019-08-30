@@ -12,9 +12,10 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("default")
+@Profile({"default", "localDev"})
 public class WaterAuthJwtEnhancer implements TokenEnhancer {
 	public static final String EMAIL_JWT_KEY = "email"; //User Email
+	public static final String DETAILS_JWT_KEY = "details"; //User Details
 
 	@Override
 	public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
@@ -22,10 +23,10 @@ public class WaterAuthJwtEnhancer implements TokenEnhancer {
 		Map<String, Object> info = new HashMap<>();
 
 		info.put(EMAIL_JWT_KEY, user.getEmail());
+		info.put(DETAILS_JWT_KEY, user.getDetails());
 
 		((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(info);
 
 		return accessToken;
 	}
-
 }

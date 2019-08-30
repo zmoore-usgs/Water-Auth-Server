@@ -17,6 +17,7 @@ localUserName: localusr
 localUserPassword: changeMe
 localUserRole: ACTUATOR, DBA_55
 localUserEmail: localusr@usgs.gov
+localUserOfficeState: WI
 
 localContextPath: /auth
 
