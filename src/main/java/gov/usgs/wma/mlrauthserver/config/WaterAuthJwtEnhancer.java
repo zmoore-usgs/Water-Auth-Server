@@ -4,7 +4,6 @@ import gov.usgs.wma.mlrauthserver.model.WaterAuthUser;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -12,7 +11,6 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile({"default", "localDev"})
 public class WaterAuthJwtEnhancer implements TokenEnhancer {
 	public static final String EMAIL_JWT_KEY = "email"; //User Email
 	public static final String DETAILS_JWT_KEY = "details"; //User Details
