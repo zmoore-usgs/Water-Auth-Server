@@ -1,6 +1,18 @@
 [![Build Status](https://travis-ci.org/USGS-CIDA/Water-Auth-Server.svg?branch=master)](https://travis-ci.org/USGS-CIDA/Water-Auth-Server)
 
 # Water-Auth-Server
+## What is this?
+Water Auth Server is an application designed to serve as a thin bridge between a SAML IDP and clients that are using OAuth2. The server stores no user information itself, but rather when a user from a downstream OAuth2 client attempts to login they are redirected to the SAML IDP for login and then their details are sent back to WaterAuth, which then creates and sends a JWT token back to the OAuth2 client application.
+
+Water Auth Server allows mapping a select subset of the attributes from the SAML Response to claims in the OAuth2 token, including:
+
+1. Mapping the user's principal name from SAML to the principal of the OAuth2 token
+2. Mapping user groups from SAML to roles in the OAuth2 token 
+3. Mapping the user's email from SAML to a top-level "email" claim in the OAuth2 token
+4. Mapping additional details about the user (currently includes Office State) to a "details" top-level claim in the OAuth2 token
+
+When mapping groups from SAML to roles in the OAuth2 token Water Auth additionally supports whitelisting which groups to include based on the resource ID of the client application. This helps keep tokens for individual applications smaller when a user belongs to many different groups.
+
 ## Running Locally
 ### Specifying Environment Variable Values
 The sample.application.yml can be copied to application.yml and the values can be modified to fit your local configuration.
