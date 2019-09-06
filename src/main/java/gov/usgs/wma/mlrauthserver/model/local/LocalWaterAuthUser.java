@@ -9,15 +9,15 @@ import gov.usgs.wma.mlrauthserver.model.WaterAuthUserDetails;
 
 @SuppressWarnings("serial")
 public class LocalWaterAuthUser extends WaterAuthUser {
-    private String password;
+	private String password;
 
-    public LocalWaterAuthUser(String username, String password, String email, List<? extends GrantedAuthority> grantedAuthorities, WaterAuthUserDetails details) {
-        super(username, email, grantedAuthorities, details);
-        this.password = password;
-    }
+	public LocalWaterAuthUser(String username, String password, String email, List<? extends GrantedAuthority> grantedAuthorities, WaterAuthUserDetails details) {
+		super(username, email, grantedAuthorities, details);
+		this.password = password;
+	}
 
-    @Override
-    public String getPassword() {
-        return password;
-    }
+	@Override
+	public String getPassword() {
+		return password;
+	}
 }

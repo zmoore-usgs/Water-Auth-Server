@@ -1,21 +1,25 @@
 package gov.usgs.wma.mlrauthserver.model;
 
-public class WaterAuthUserDetails {
-    private String officeState;
+import java.io.Serializable;
 
-    public WaterAuthUserDetails() {
+public class WaterAuthUserDetails implements Serializable {
 
-    }
+	private static final long serialVersionUID = 1L;
+	private String officeState;
 
-    public WaterAuthUserDetails(String officeState) {
-        this.officeState = officeState;
-    }
+	public WaterAuthUserDetails() {
 
-    public String getOfficeState() {
-        return officeState;
-    }
+	}
 
-    public void setOfficeState(String officeState) {
-        this.officeState = officeState;
-    }
+	public WaterAuthUserDetails(String officeState) {
+		this.officeState = officeState;
+	}
+
+	public String getOfficeState() {
+		return officeState;
+	}
+
+	public void setOfficeState(String officeState) {
+		this.officeState = officeState;
+	}
 }

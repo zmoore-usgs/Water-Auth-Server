@@ -28,11 +28,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @SpringBootConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
 @TestPropertySource(properties = {
-    "spring.datasource.url=jdbc:h2:mem:db;DB_CLOSE_DELAY=-1",
-    "spring.datasource.username=testuser",
-    "spring.datasource.password=testpassword",
-    "spring.session.jdbc.initializer.enabled=true",
-    "spring.datasource.driverClassName=org.h2.Driver",
+	"spring.datasource.url=jdbc:h2:mem:db;DB_CLOSE_DELAY=-1",
+	"spring.datasource.username=testuser",
+	"spring.datasource.password=testpassword",
+	"spring.session.jdbc.initializer.enabled=true",
+	"spring.datasource.driverClassName=org.h2.Driver",
 })
 @ContextConfiguration(classes = { PersistenceConfig.class } )
 public class PersistenceConfigTest {

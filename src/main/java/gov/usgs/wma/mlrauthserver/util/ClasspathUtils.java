@@ -6,8 +6,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
 public class ClasspathUtils {
-    
-    public static Resource loadFromFileOrClasspath(String filePath) {
+	
+	public static Resource loadFromFileOrClasspath(String filePath) {
 		ResourceLoader loader;
 		String adjustedPath;
 

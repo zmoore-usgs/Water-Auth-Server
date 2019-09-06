@@ -21,45 +21,45 @@ import gov.usgs.wma.mlrauthserver.model.local.LocalWaterAuthUser;
  */
 public class LocalInMemoryWaterAuthUserDetailsManager implements UserDetailsManager {
 
-    private final Map<String, LocalWaterAuthUser> users = new HashMap<>();
+	private final Map<String, LocalWaterAuthUser> users = new HashMap<>();
 
-    @Override
-    public void createUser(UserDetails user) {
-        Assert.isTrue(!userExists(user.getUsername()), "User with username '" + user.getUsername() + "' already exists.");
+	@Override
+	public void createUser(UserDetails user) {
+		Assert.isTrue(!userExists(user.getUsername()), "User with username '" + user.getUsername() + "' already exists.");
 
-        users.put(user.getUsername().toLowerCase(), (LocalWaterAuthUser) user);
-    }
+		users.put(user.getUsername().toLowerCase(), (LocalWaterAuthUser) user);
+	}
 
-    @Override
-    public void updateUser(UserDetails user) {
-        Assert.isTrue(userExists(user.getUsername()), "User with username '" + user.getUsername() + "' does not exists.");
+	@Override
+	public void updateUser(UserDetails user) {
+		Assert.isTrue(userExists(user.getUsername()), "User with username '" + user.getUsername() + "' does not exists.");
 
-        users.put(user.getUsername().toLowerCase(), (LocalWaterAuthUser) user);
-    }
+		users.put(user.getUsername().toLowerCase(), (LocalWaterAuthUser) user);
+	}
 
-    @Override
-    public void deleteUser(String username) {
-        users.remove(username.toLowerCase());
-    }
+	@Override
+	public void deleteUser(String username) {
+		users.remove(username.toLowerCase());
+	}
 
-    @Override
-    public void changePassword(String oldPassword, String newPassword) {
-        throw new UnsupportedOperationException();
-    }
+	@Override
+	public void changePassword(String oldPassword, String newPassword) {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    public boolean userExists(String username) {
-        return users.containsKey(username.toLowerCase());
-    }
+	@Override
+	public boolean userExists(String username) {
+		return users.containsKey(username.toLowerCase());
+	}
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        LocalWaterAuthUser user = users.get(username.toLowerCase());
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		LocalWaterAuthUser user = users.get(username.toLowerCase());
 
-        if (user == null) {
-            throw new UsernameNotFoundException(username);
-        }
+		if (user == null) {
+			throw new UsernameNotFoundException(username);
+		}
 
-        return user;
-    }
+		return user;
+	}
 }

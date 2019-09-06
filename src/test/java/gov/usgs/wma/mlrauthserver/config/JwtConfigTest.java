@@ -28,10 +28,10 @@ import gov.usgs.wma.mlrauthserver.dao.WaterAuthResourceIdAuthsDAO;
 @ContextConfiguration(classes = { JwtConfig.class })
 public class JwtConfigTest {
 
-    @MockBean
-    WaterAuthResourceIdAuthsDAO authDao;
-    @MockBean
-    DataSource dataSource;
+	@MockBean
+	WaterAuthResourceIdAuthsDAO authDao;
+	@MockBean
+	DataSource dataSource;
 
 	@Autowired
 	private JwtConfig jwtConfig;

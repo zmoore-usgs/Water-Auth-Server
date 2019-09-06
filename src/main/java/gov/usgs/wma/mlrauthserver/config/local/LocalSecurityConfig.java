@@ -51,12 +51,12 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        UserDetailsManager userDetailsManager = userDetailsManager();
-        auth.userDetailsService(userDetailsManager);
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		UserDetailsManager userDetailsManager = userDetailsManager();
+		auth.userDetailsService(userDetailsManager);
 
-        userDetailsManager.createUser(user());
-    }
+		userDetailsManager.createUser(user());
+	}
 
 	@Bean
 	@Primary
@@ -75,9 +75,9 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-    public UserDetailsManager userDetailsManager() {
-        return new LocalInMemoryWaterAuthUserDetailsManager();
-    }
+	public UserDetailsManager userDetailsManager() {
+		return new LocalInMemoryWaterAuthUserDetailsManager();
+	}
 
 	@Bean
 	public AuthenticationEntryPoint samlEntryPoint() {
