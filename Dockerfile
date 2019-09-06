@@ -43,6 +43,7 @@ ENV samlIdpPort=443
 ENV samlGroupAttributeNames=http://schemas.xmlsoap.org/claims/Group
 ENV samlEmailAttributeNames=http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress,EmailAddress
 ENV samlUsernameAttributeNames=http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname
+ENV samlOfficeStateAttributeName=state
 ENV loginSuccessTargetUrl=/
 ENV loginErrorTargetUrl=/auth-error
 ENV logoutSuccessTargetUrl=/out
@@ -67,6 +68,7 @@ ENV localUserName=user
 ENV localUserPassword=changeMe
 ENV localUserRole="ACTUATOR, DBA_EXAMPLE"
 ENV localUserEmail=localuser@example.gov
+ENV localUserOfficeState=WI
 ENV localContextPath=/auth/
 
 COPY --chown=1000:1000 docker/launch-app.sh ${LAUNCH_APP_SCRIPT}

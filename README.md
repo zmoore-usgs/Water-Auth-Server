@@ -1,6 +1,18 @@
 [![Build Status](https://travis-ci.org/USGS-CIDA/Water-Auth-Server.svg?branch=master)](https://travis-ci.org/USGS-CIDA/Water-Auth-Server)
 
 # Water-Auth-Server
+## What is this?
+Water Auth Server is an application designed to serve as a thin bridge between a SAML IDP and clients that are using OAuth2. The server stores no user information itself, but rather when a user from a downstream OAuth2 client attempts to login they are redirected to the SAML IDP for login and then their details are sent back to WaterAuth, which then creates and sends a JWT token back to the OAuth2 client application.
+
+Water Auth Server allows mapping a select subset of the attributes from the SAML Response to claims in the OAuth2 token, including:
+
+1. Mapping the user's principal name from SAML to the principal of the OAuth2 token
+2. Mapping user groups from SAML to roles in the OAuth2 token 
+3. Mapping the user's email from SAML to a top-level "email" claim in the OAuth2 token
+4. Mapping additional details about the user (currently includes Office State) to a "details" top-level claim in the OAuth2 token
+
+When mapping groups from SAML to roles in the OAuth2 token Water Auth additionally supports whitelisting which groups to include based on the resource ID of the client application. This helps keep tokens for individual applications smaller when a user belongs to many different groups.
+
 ## Running Locally
 ### Specifying Environment Variable Values
 The sample.application.yml can be copied to application.yml and the values can be modified to fit your local configuration.
@@ -96,11 +108,13 @@ The authentication request sent from the application to the SAML IDP server can 
 ### SAML Attribute Mapping
 In addition to logging the user in through SAML this service also acts as an Oauth2 Authorization Server and converts some of the returned SAML assertions into Oauth2 authorizations. The following environment variables are used to do this mapping.
 
-- **samlGroupAttributeName** - [Default: `http://schemas.xmlsoap.org/claims/Group`] The SAML attribute key that corresponds to the groups that the user is part of. The values found attached to this key will be converted into authorizations in the Oauth2 token.
+- **samlGroupAttributeNames** - [Default: `http://schemas.xmlsoap.org/claims/Group`] The SAML attribute key that corresponds to the groups that the user is part of. The values found attached to this key will be converted into authorizations in the Oauth2 token.
 
-- **samlEmailAttributeName** - [Default: `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress`] The SAML attribute key that corresponds to the email address of the logged-in user. This value will be contained in the Oauth2 requests and JWTs as "email" in the JWT and within the Oauth2 Request Extensions.
+- **samlEmailAttributeNames** - [Default: `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress`] The SAML attribute key that corresponds to the email address of the logged-in user. This value will be contained in the Oauth2 requests and JWTs as "email" in the JWT and within the Oauth2 Request Extensions.
 
-- **samlUsernameAttributeName** - [Default: `http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname`] The SAML attribute key that corresponds to the username of the logged-in user. This value will be used as the principal value and name in the Spring Security Context and will be contained in the JWTs as "user_name".
+- **samlUsernameAttributeNames** - [Default: `http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname`] The SAML attribute key that corresponds to the username of the logged-in user. This value will be used as the principal value and name in the Spring Security Context and will be contained in the JWTs as "user_name".
+
+- **samlOfficeStateAttributeNames** - [Default: `state`] The SAML attribute key that corresponds to the office state code of the logged-in user. This value will be contained in the Oauth2 requests and JWTs as "officeState" within the "details" section in the JWT and within the Oauth2 Request Extensions.
 
 ### Keystore
 A keystore is used by the SAML service to ensure secure communication with the IDP server. Your keystore should contain the certs used on the IDP server as well as any certs required to reach your metadata XML if it is being supplied via http. The same keystore is also used by the Oauth2 portion of the application in order to sign JWT tokens.

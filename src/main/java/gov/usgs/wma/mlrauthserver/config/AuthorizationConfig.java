@@ -69,5 +69,4 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 		.tokenStore(tokenStore)
 		.accessTokenConverter(accessTokenConverter);
 	}
-
 }

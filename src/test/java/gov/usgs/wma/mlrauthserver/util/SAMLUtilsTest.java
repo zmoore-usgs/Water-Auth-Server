@@ -1,6 +1,7 @@
 package gov.usgs.wma.mlrauthserver.util;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
@@ -23,6 +24,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.saml.SAMLCredential;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -30,7 +32,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @SpringBootTest
 @SpringBootConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = { SAMLUtilsTest.class })
+@ContextConfiguration(classes = { SAMLUtils.class })
 public class SAMLUtilsTest {
     @Mock
     private SAMLCredential samlCredential;
@@ -126,7 +128,6 @@ public class SAMLUtilsTest {
         when(val2.getTextContent()).thenReturn("test");
         XSAny val3 = mock(XSAny.class);
         when(val3.toString()).thenReturn("test");
-
         assertEquals(SAMLUtils.getAttributeTextValue(val1), "test");
         assertEquals(SAMLUtils.getAttributeTextValue(val2), "test");
         assertEquals(SAMLUtils.getAttributeTextValue(val3), "test");
@@ -139,27 +140,27 @@ public class SAMLUtilsTest {
         attrMap.put("key2", Arrays.asList("test3"));
         attrMap.put("key3", new ArrayList<>());
 
-        List<String> result = SAMLUtils.getFirstMatchingAttributeValueList(attrMap, new String[]{"key1"});
+        List<String> result = SAMLUtils.getFirstMatchingAttributeValueList(attrMap, new String[]{"key1"}, true);
         assertEquals(result.size(), 2);
         assertThat(result, containsInAnyOrder("test1", "test2"));
         
-        result = SAMLUtils.getFirstMatchingAttributeValueList(attrMap, new String[]{"key1", "key2"});
+        result = SAMLUtils.getFirstMatchingAttributeValueList(attrMap, new String[]{"key1", "key2"}, true);
         assertEquals(result.size(), 2);
         assertThat(result, containsInAnyOrder("test1", "test2"));
 
-        result = SAMLUtils.getFirstMatchingAttributeValueList(attrMap, new String[]{"key2", "key1"});
+        result = SAMLUtils.getFirstMatchingAttributeValueList(attrMap, new String[]{"key2", "key1"}, true);
         assertEquals(result.size(), 1);
         assertThat(result, containsInAnyOrder("test3"));
 
-        result = SAMLUtils.getFirstMatchingAttributeValueList(attrMap, new String[]{"key2"});
+        result = SAMLUtils.getFirstMatchingAttributeValueList(attrMap, new String[]{"key2"}, false);
         assertEquals(result.size(), 1);
         assertThat(result, containsInAnyOrder("test3"));
 
-        result = SAMLUtils.getFirstMatchingAttributeValueList(attrMap, new String[]{"key3", "key1"});
+        result = SAMLUtils.getFirstMatchingAttributeValueList(attrMap, new String[]{"key3", "key1"}, false);
         assertEquals(result.size(), 2);
         assertThat(result, containsInAnyOrder("test1", "test2"));
 
-        result = SAMLUtils.getFirstMatchingAttributeValueList(attrMap, new String[]{"key1", "key3"});
+        result = SAMLUtils.getFirstMatchingAttributeValueList(attrMap, new String[]{"key1", "key3"}, false);
         assertEquals(result.size(), 2);
         assertThat(result, containsInAnyOrder("test1", "test2"));
     }
@@ -169,18 +170,65 @@ public class SAMLUtilsTest {
         Map<String,List<String>> attrMap = new HashMap<>();
         attrMap.put("key1", new ArrayList<>());
 
+        assertTrue(SAMLUtils.getFirstMatchingAttributeValueList(attrMap, new String[]{"key1"}, false).isEmpty());
+        assertTrue(SAMLUtils.getFirstMatchingAttributeValueList(attrMap, new String[]{"key2"}, false).isEmpty());
+
         try {
-            SAMLUtils.getFirstMatchingAttributeValueList(attrMap, new String[]{"key1"});
+            SAMLUtils.getFirstMatchingAttributeValueList(attrMap, new String[]{"key1"}, true);
             fail("Expected RuntimeException");
         } catch(RuntimeException e) {
             assertTrue(e.getMessage().contains("but none of the matching keys contained any data!"));
         }
 
         try {
-            SAMLUtils.getFirstMatchingAttributeValueList(attrMap, new String[]{"key2"});
+            SAMLUtils.getFirstMatchingAttributeValueList(attrMap, new String[]{"key2"}, true);
             fail("Expected RuntimeException");
         } catch(RuntimeException e) {
             assertTrue(e.getMessage().contains("SAML response had no key matching any of"));
         }
+    }
+
+    @Test
+	public void addAuthoritiesTest() {
+        Map<String,List<String>> attrMap = new HashMap<>();
+        attrMap.put("groupkey1", Arrays.asList("group1","group2"));
+        List<GrantedAuthority> authorityList = SAMLUtils.groupsToAuthoritiesList(attrMap, new String[]{"groupkey1"});
+        assertFalse(authorityList.isEmpty());
+        assertEquals(authorityList.size(), 2);
+        assertEquals(authorityList.get(0).getAuthority(), "group1");
+        assertEquals(authorityList.get(1).getAuthority(), "group2");
+
+        attrMap.clear();
+        attrMap.put("groupkey2", Arrays.asList("group1","group2"));
+        authorityList = SAMLUtils.groupsToAuthoritiesList(attrMap, new String[]{"groupkey2"});
+        assertFalse(authorityList.isEmpty());
+        assertEquals(authorityList.size(), 2);
+        assertEquals(authorityList.get(0).getAuthority(), "group1");
+        assertEquals(authorityList.get(1).getAuthority(), "group2");
+
+        attrMap.clear();
+        attrMap.put("groupkey1", Arrays.asList("group1"));
+        attrMap.put("groupkey2", Arrays.asList("group2"));
+        authorityList = SAMLUtils.groupsToAuthoritiesList(attrMap, new String[]{"groupkey1"});
+        assertFalse(authorityList.isEmpty());
+        assertEquals(authorityList.size(), 1);
+        assertEquals(authorityList.get(0).getAuthority(), "group1");
+
+        attrMap.clear();
+        attrMap.put("groupkey3", Arrays.asList("group1"));
+        attrMap.put("groupkey2", Arrays.asList("group2"));
+        authorityList = SAMLUtils.groupsToAuthoritiesList(attrMap, new String[]{"groupkey2"});
+        assertFalse(authorityList.isEmpty());
+        assertEquals(authorityList.size(), 1);
+        assertEquals(authorityList.get(0).getAuthority(), "group2");
+
+        attrMap.clear();
+        authorityList = SAMLUtils.groupsToAuthoritiesList(attrMap, new String[]{"groupkey1"});
+        assertTrue(authorityList.isEmpty());
+
+        attrMap.clear();
+        attrMap.put("groupkey3", Arrays.asList("group1"));
+        authorityList = SAMLUtils.groupsToAuthoritiesList(attrMap, new String[]{"groupkey1"});
+        assertTrue(authorityList.isEmpty());
     }
 }

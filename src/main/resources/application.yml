@@ -27,6 +27,8 @@ security:
       group: ${samlGroupAttributeNames:http://schemas.xmlsoap.org/claims/Group}
       email: ${samlEmailAttributeNames:http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress}
       username: ${samlUsernameAttributeNames:http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname}
+      details:
+        office-state: ${samlOfficeStateAttributeNames:state}
     logging:
       messages: ${samlLoggingIncludeMessages:false}
       errors: ${samlLoggingIncludeErrors:true}

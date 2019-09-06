@@ -7,11 +7,13 @@ security:
       scopes: ${localOauthClientScopes}
     resource:
       id: ${localOauthResourceId}
-  user:
-    name: ${localUserName}
+  water-auth-user:
+    username: ${localUserName}
     password: ${localUserPassword}
     role: ${localUserRole}
     email: ${localUserEmail}
+    details:
+      office-state: ${localUserOfficeState}
 
 server:
   context-path: ${localContextPath:/auth}

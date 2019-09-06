@@ -54,7 +54,7 @@ public class WaterAuthDBFilteredAccessTokenConverter extends DefaultAccessTokenC
         return returnMap;
     }
 
-    public static Set<String> getAuthSetFromTokenMap(Map<String, ?> tokenMap) {
+    public Set<String> getAuthSetFromTokenMap(Map<String, ?> tokenMap) {
         Set<String> returnSet = new HashSet<>();
 
         if(tokenMap.get(AUTHORITIES) != null) {
