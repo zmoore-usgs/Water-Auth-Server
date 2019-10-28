@@ -3,6 +3,8 @@ package gov.usgs.wma.mlrauthserver.model;
 import java.util.Collection;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -32,6 +34,10 @@ public class WaterAuthUser implements UserDetails {
 	public String getUsername() {
 		return username;
 	}
+
+	public String getOfficeState() {
+		return this.details != null ? this.details.getOfficeState() : null;
+	}
 	
 	public boolean isAccountNonExpired() {
 		return true;
@@ -51,9 +57,5 @@ public class WaterAuthUser implements UserDetails {
 
 	public String getEmail() {
 		return email;
-	}
-
-	public WaterAuthUserDetails getDetails() {
-		return details;
 	}
 }

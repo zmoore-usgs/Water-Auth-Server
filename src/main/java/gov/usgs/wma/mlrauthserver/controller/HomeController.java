@@ -25,7 +25,7 @@ public class HomeController {
 			"<big><b>Username: </b>" + user.getUsername() + "</big>" +
 			"<br/><big><b>Email: </b>" + user.getEmail() + "</big>" +
 			"<br/><big><b>Details: </b></big>" +
-				"<br/>&nbsp;&nbsp;&nbsp;&nbsp;<b>Office State: </b>" + user.getDetails().getOfficeState() +
+				"<br/>&nbsp;&nbsp;&nbsp;&nbsp;<b>Office State: </b>" + user.getOfficeState() +
 			"<br/><big><b>Groups: </b></big>";
 		for(GrantedAuthority role : user.getAuthorities()) {
 			result += "<br/>&nbsp;&nbsp;&nbsp;&nbsp;" + role.getAuthority();

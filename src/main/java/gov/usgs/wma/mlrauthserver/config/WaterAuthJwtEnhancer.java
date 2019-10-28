@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class WaterAuthJwtEnhancer implements TokenEnhancer {
 	public static final String EMAIL_JWT_KEY = "email"; //User Email
-	public static final String DETAILS_JWT_KEY = "details"; //User Details
+	public static final String OFFICE_STATE_JWT_KEY = "office_state"; //User Office State
 
 	@Override
 	public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
@@ -21,7 +21,7 @@ public class WaterAuthJwtEnhancer implements TokenEnhancer {
 		Map<String, Object> info = new HashMap<>();
 
 		info.put(EMAIL_JWT_KEY, user.getEmail());
-		info.put(DETAILS_JWT_KEY, user.getDetails());
+		info.put(OFFICE_STATE_JWT_KEY, user.getOfficeState());
 
 		((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(info);
 
