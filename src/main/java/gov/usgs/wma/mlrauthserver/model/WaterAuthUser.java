@@ -33,8 +33,8 @@ public class WaterAuthUser implements UserDetails {
 		return username;
 	}
 
-	public String getOfficeState() {
-		return this.details != null ? this.details.getOfficeState() : null;
+	public WaterAuthUserDetails getDetails() {
+		return details;
 	}
 	
 	public boolean isAccountNonExpired() {

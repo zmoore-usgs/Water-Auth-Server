@@ -20,9 +20,14 @@ public class WaterAuthJwtEnhancer implements TokenEnhancer {
 		WaterAuthUser user = (WaterAuthUser) authentication.getPrincipal();
 		Map<String, Object> info = new HashMap<>();
 
+		// Required Details
 		info.put(EMAIL_JWT_KEY, user.getEmail());
-		info.put(OFFICE_STATE_JWT_KEY, user.getOfficeState());
 
+		// Optional Details
+		if(user.getDetails() != null) {
+			info.put(OFFICE_STATE_JWT_KEY, user.getDetails().getOfficeState());
+		}
+		
 		((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(info);
 
 		return accessToken;

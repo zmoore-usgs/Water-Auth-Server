@@ -74,7 +74,7 @@ public class SAMLUserDetailsImplTest {
 		WaterAuthUser result = sAMLUserDetailsImpl.loadUserBySAML(samlCredential);
 		assertEquals(result.getUsername(), "test1");
 		assertEquals(result.getEmail(), "test1@test.gov");
-		assertEquals(result.getOfficeState(), "WI");
+		assertEquals(result.getDetails().getOfficeState(), "WI");
 		assertEquals(result.getPassword(), null);
 		assertEquals(result.getAuthorities().size(), 2);
 		assertEquals(((GrantedAuthority)result.getAuthorities().toArray()[0]).getAuthority(), "group1");
@@ -108,7 +108,7 @@ public class SAMLUserDetailsImplTest {
 		WaterAuthUser result = sAMLUserDetailsImpl.loadUserBySAML(samlCredential);
 		assertEquals(result.getUsername(), "test1");
 		assertEquals(result.getEmail(), "test1@test.gov");
-		assertEquals(result.getOfficeState(), "WI");
+		assertEquals(result.getDetails().getOfficeState(), "WI");
 		assertEquals(result.getPassword(), null);
 		assertEquals(result.getAuthorities().size(), 0);
 	}
@@ -139,7 +139,7 @@ public class SAMLUserDetailsImplTest {
 		WaterAuthUser result = sAMLUserDetailsImpl.loadUserBySAML(samlCredential);
 		assertEquals(result.getUsername(), "test1");
 		assertEquals(result.getEmail(), "test1@test.gov");
-		assertEquals(result.getOfficeState(), null);
+		assertEquals(result.getDetails().getOfficeState(), null);
 		assertEquals(result.getPassword(), null);
 		assertEquals(result.getAuthorities().size(), 0);
 	}
