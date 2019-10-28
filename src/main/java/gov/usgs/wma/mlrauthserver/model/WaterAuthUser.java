@@ -33,6 +33,10 @@ public class WaterAuthUser implements UserDetails {
 		return username;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
 	public WaterAuthUserDetails getDetails() {
 		return details;
 	}
@@ -51,9 +55,5 @@ public class WaterAuthUser implements UserDetails {
 
 	public boolean isEnabled() {
 		return true;
-	}
-
-	public String getEmail() {
-		return email;
 	}
 }
