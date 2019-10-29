@@ -18,7 +18,7 @@ public class WaterAuthUser implements UserDetails {
 		this.username = username;
 		this.email = email;
 		this.grantedAuthorities = grantedAuthorities;
-		this.details = details;
+		this.details = details != null ? details : new WaterAuthUserDetails();
 	}
 
 	public Collection<? extends GrantedAuthority> getAuthorities() {
