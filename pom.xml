@@ -7,9 +7,9 @@
     <packaging>jar</packaging>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.9.RELEASE</version>
+	    <groupId>gov.usgs.water</groupId>
+	    <artifactId>code-quality</artifactId>
+	    <version>1.1.0</version>
     </parent>
 
     <properties>
@@ -22,6 +22,7 @@
 
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+	<spring.boot.version>1.5.9.RELEASE</spring.boot.version>
     </properties>
 
     <distributionManagement>
@@ -37,6 +38,26 @@
         </snapshotRepository>
     </distributionManagement>
 
+    <repositories>
+	    <repository>
+		    <id>wma-maven-centralized</id>
+		    <name>Water Mission Area Snapshots and Releases</name>
+		    <url>https://cida.usgs.gov/artifactory/wma-maven-centralized</url>
+	    </repository>
+    </repositories>
+
+<dependencyManagement>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-dependencies</artifactId>
+			<version>${spring.boot.version}</version>
+			<scope>import</scope>
+			<type>pom</type>
+		</dependency>
+	</dependencies>
+</dependencyManagement>
+	
     <dependencies>
         <dependency>
             <groupId>org.springframework.security.oauth</groupId>
@@ -91,10 +112,20 @@
     </dependencies>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+	    <plugins>
+		    <plugin>
+			    <groupId>org.springframework.boot</groupId>
+			    <artifactId>spring-boot-maven-plugin</artifactId>
+			    <version>${spring.boot.version}</version>
+			    <executions>
+				    <execution>
+					    <phase>package</phase>
+					    <goals>
+						    <goal>repackage</goal>
+					    </goals>
+				    </execution>
+			    </executions>
+
             </plugin>
         </plugins>
     </build>

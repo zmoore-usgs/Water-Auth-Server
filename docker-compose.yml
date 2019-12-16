@@ -14,7 +14,12 @@
   services:
     waterauth:
       container_name: waterauth
-      build: .
+      build: 
+        context: .
+        args:
+          # the -D option supresses INFO-level logs about dependency downloads. This enables the build to finish within Travis' log length limit.
+          # The -P option skips the dependency security check in favor of build stability -- the official NVD server is rate-limited, and external builds lack access to our internal NVD mirror
+         BUILD_COMMAND: 'mvn -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn clean verify -P=!dependency-security-check'
       image: water-auth-server
       ports:
         - "8443:8443"
