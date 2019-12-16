@@ -26,7 +26,7 @@ RUN mvn clean
 # copy git history into build image so that sonar can report trends over time
 COPY .git /build
 COPY src /build/src
-ARG BUILD_COMMAND="mvn package"
+ARG BUILD_COMMAND="mvn verify"
 RUN ${BUILD_COMMAND}
 
 FROM usgswma/wma-spring-boot-base:8-jre-slim
