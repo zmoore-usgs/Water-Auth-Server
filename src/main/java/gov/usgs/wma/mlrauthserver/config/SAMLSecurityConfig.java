@@ -582,6 +582,7 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/health/").permitAll()
 				.antMatchers("/login/").permitAll()
 				.antMatchers("/oauth/authorize/").permitAll()
+				.antMatchers("/oauth/jwks.json").permitAll()
 				.anyRequest().authenticated()
 			.and()
 				.logout()
