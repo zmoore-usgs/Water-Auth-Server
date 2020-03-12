@@ -21,7 +21,7 @@
         <wma.artifactory.url>https://cida.usgs.gov/artifactory</wma.artifactory.url>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-	    <spring.boot.version>1.5.9.RELEASE</spring.boot.version>
+        <spring.boot.version>1.5.9.RELEASE</spring.boot.version>
     </properties>
 
     <distributionManagement>
