@@ -38,7 +38,7 @@ public class WaterAuthJwtUserAuthConverter extends DefaultUserAuthenticationConv
 				authorities = new ArrayList<>(defaultAuth.getAuthorities());
 
 				// Optional Details
-				details.setOfficeState(map.containsKey(OFFICE_STATE_JWT_KEY) ? (String)map.get(OFFICE_STATE_JWT_KEY) : null);
+				details.setOfficeState((String)map.get(OFFICE_STATE_JWT_KEY));
 			} catch (Exception e) {
 				LOG.error("Failed to convert recieved JWT token to a Water Auth User. Error: " + e.getMessage());
 				throw new InvalidTokenException("Failed to convert recieved JWT token to a Water Auth User.");
