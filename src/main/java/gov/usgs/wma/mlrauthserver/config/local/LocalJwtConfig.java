@@ -1,5 +1,6 @@
 package gov.usgs.wma.mlrauthserver.config.local;
 
+import java.security.KeyPair;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,17 +42,21 @@ public class LocalJwtConfig {
 	}
 
 	@Bean
-	public JwtAccessTokenConverter accessTokenConverter() {
+	public KeyPair keyPair() {
 		Resource storeFile = ClasspathUtils.loadFromFileOrClasspath(this.keystorePath);
 		KeyStoreKeyFactory keyStoreKeyFactory =
 				new KeyStoreKeyFactory(storeFile,this.keystorePassword.toCharArray());
+		return keyStoreKeyFactory.getKeyPair(this.keystoreOAuthKey);
+	}
 
+	@Bean
+	public JwtAccessTokenConverter accessTokenConverter() {
 		WaterAuthJwtUserAuthConverter userConverter = new WaterAuthJwtUserAuthConverter();
 		DefaultAccessTokenConverter tokenConverter = new DefaultAccessTokenConverter();
 		tokenConverter.setUserTokenConverter(userConverter);
 
 		JwtAccessTokenConverter jwtConverter = new JwtAccessTokenConverter();
-		jwtConverter.setKeyPair(keyStoreKeyFactory.getKeyPair(this.keystoreOAuthKey));
+		jwtConverter.setKeyPair(keyPair());
 		jwtConverter.setAccessTokenConverter(tokenConverter);
 		
 		return jwtConverter;

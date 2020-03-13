@@ -18,7 +18,7 @@ public class WaterAuthUser implements UserDetails {
 		this.username = username;
 		this.email = email;
 		this.grantedAuthorities = grantedAuthorities;
-		this.details = details;
+		this.details = details != null ? details : new WaterAuthUserDetails();
 	}
 
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -31,6 +31,14 @@ public class WaterAuthUser implements UserDetails {
 
 	public String getUsername() {
 		return username;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public WaterAuthUserDetails getDetails() {
+		return details;
 	}
 	
 	public boolean isAccountNonExpired() {
@@ -47,13 +55,5 @@ public class WaterAuthUser implements UserDetails {
 
 	public boolean isEnabled() {
 		return true;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public WaterAuthUserDetails getDetails() {
-		return details;
 	}
 }

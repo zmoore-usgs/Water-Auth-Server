@@ -1,5 +1,6 @@
 package gov.usgs.wma.mlrauthserver.config;
 
+import java.security.KeyPair;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,6 @@ import gov.usgs.wma.mlrauthserver.util.ClasspathUtils;
 @Configuration
 @Profile("default")
 public class JwtConfig {
-
 	@Value("${security.jwt.key-store}")
 	private String keystorePath;
 	@Value("${security.jwt.key-store-oauth-key}")
@@ -38,22 +38,28 @@ public class JwtConfig {
 	WaterAuthResourceIdAuthsDAO authsDao;
 
 	@Bean
+	public KeyPair keyPair() {
+		Resource storeFile = ClasspathUtils.loadFromFileOrClasspath(this.keystorePath);
+		KeyStoreKeyFactory keyStoreKeyFactory =
+				new KeyStoreKeyFactory(storeFile,this.keystorePassword.toCharArray());
+		return keyStoreKeyFactory.getKeyPair(this.keystoreOAuthKey);
+	}
+
+	@Bean
 	public TokenStore tokenStore() {
 		return new JwtTokenStore(accessTokenConverter());
 	}
 
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
-		Resource storeFile = ClasspathUtils.loadFromFileOrClasspath(this.keystorePath);
-		KeyStoreKeyFactory keyStoreKeyFactory =
-				new KeyStoreKeyFactory(storeFile,this.keystorePassword.toCharArray());
+		
 
 		WaterAuthJwtUserAuthConverter userConverter = new WaterAuthJwtUserAuthConverter();
 		WaterAuthDBFilteredAccessTokenConverter tokenConverter = new WaterAuthDBFilteredAccessTokenConverter(this.authsDao);
 		tokenConverter.setUserTokenConverter(userConverter);
 
 		JwtAccessTokenConverter jwtConverter = new JwtAccessTokenConverter();
-		jwtConverter.setKeyPair(keyStoreKeyFactory.getKeyPair(this.keystoreOAuthKey));
+		jwtConverter.setKeyPair(keyPair());
 		jwtConverter.setAccessTokenConverter(tokenConverter);
 		
 		return jwtConverter;
