@@ -3,7 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>gov.usgs.wma</groupId>
     <artifactId>waterauthserver</artifactId>
-    <version>0.4.0-SNAPSHOT</version>
+    <!-- Static version that does not change. Versioning handled by Docker image.-->
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <parent>
