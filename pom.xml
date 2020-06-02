@@ -22,28 +22,25 @@
         <wma.artifactory.url>https://cida.usgs.gov/artifactory</wma.artifactory.url>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <spring.boot.version>1.5.9.RELEASE</spring.boot.version>
+        <spring.boot.version>1.5.22.RELEASE</spring.boot.version>
     </properties>
 
-    <distributionManagement>
-        <repository>
-            <id>release</id>
-            <name>cidasdpdasartip.cr.usgs.gov-releases</name>
-            <url>${wma.artifactory.url}/mlr-maven-releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <name>cidasdpdasartip.cr.usgs.gov-snapshots</name>
-            <url>${wma.artifactory.url}/mlr-maven-snapshots</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <repositories>
-	    <repository>
-		    <id>wma-maven-centralized</id>
-		    <name>Water Mission Area Snapshots and Releases</name>
-		    <url>https://cida.usgs.gov/artifactory/wma-maven-centralized</url>
-	    </repository>
+        <repository>
+            <id>maven-centralized</id>
+            <name>Maven Snapshots and Releases</name>
+            <url>https://artifactory.wma.usgs.gov/artifactory/maven-central</url>
+        </repository>
+        <repository>
+            <id>wma-maven-centralized</id>
+            <name>Water Mission Area Snapshots and Releases</name>
+            <url>https://artifactory.wma.usgs.gov/artifactory/wma-maven</url>
+        </repository>
+        <repository>
+            <id>eros-artifactory-wma-maven-releases</id>
+            <name>EROS Artifactory</name>
+            <url>https://artifactory.wma.usgs.gov/artifactory/eros-artifactory-wma-maven-releases</url>
+        </repository>
     </repositories>
 
     <dependencyManagement>
