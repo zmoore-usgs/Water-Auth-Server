@@ -132,6 +132,8 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	private boolean forceAuth;
 	@Value("${security.saml.idp.auth-contexts}")
 	private String csvAuthContexts;
+	@Value("${security.saml.idp.max-auth-response-age}")
+	private Integer maxAuthnResponseAge;
 
 	//Local SAML Endpoint Configuration
 	@Value("${security.saml.endpoint.base}")
@@ -268,6 +270,8 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public WebSSOProfileConsumer webSSOprofileConsumer() {
+		WebSSOProfileConsumerImpl consumer = new WebSSOProfileConsumerImpl();
+		consumer.setMaxAuthenticationAge(maxAuthnResponseAge);
 		return new WebSSOProfileConsumerImpl();
 	}
 
