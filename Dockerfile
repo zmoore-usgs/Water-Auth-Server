@@ -47,6 +47,7 @@ ENV dbConnectionUrl=jdbc:mysql://auth.example.gov/db
 ENV dbUsername=mysqluser
 ENV samlAuthnRequestProviderName=https://localhost:8443/saml/
 ENV samlAuthnRequestEntityId=https://localhost:8443/saml/
+ENV samlMaxAuthnResponseAge=14400
 ENV samlBaseEndpoint=/saml
 ENV samlLoginEndpoint=/login
 ENV samlLogoutEndpoint=/logout
