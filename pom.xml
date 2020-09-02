@@ -27,11 +27,6 @@
 
     <repositories>
         <repository>
-            <id>maven-centralized</id>
-            <name>Maven Snapshots and Releases</name>
-            <url>https://artifactory.wma.usgs.gov/artifactory/maven-central</url>
-        </repository>
-        <repository>
             <id>wma-maven-centralized</id>
             <name>Water Mission Area Snapshots and Releases</name>
             <url>https://artifactory.wma.usgs.gov/artifactory/wma-maven</url>
