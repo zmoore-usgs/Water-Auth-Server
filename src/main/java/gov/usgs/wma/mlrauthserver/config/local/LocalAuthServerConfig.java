@@ -43,6 +43,7 @@ public class LocalAuthServerConfig extends AuthorizationServerConfigurerAdapter 
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory()
 			.withClient(localClient)
+			.redirectUris("*")
 			.resourceIds(localResourceId)
 			.authorizedGrantTypes(localGrantTypes)
 			.scopes(localScopes)
