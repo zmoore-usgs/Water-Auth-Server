@@ -34,6 +34,8 @@ public class LocalAuthServerConfig extends AuthorizationServerConfigurerAdapter 
 	private String localSecret;
 	@Value("${security.oauth2.client.grantTypes}")
 	private String[] localGrantTypes;
+	@Value("${security.oauth2.client.redirectUris}")
+	private String[] redirectUris;
 	@Value("${security.oauth2.client.scopes}")
 	private String[] localScopes;
 	@Value("${security.oauth2.resource.id}")
@@ -43,7 +45,7 @@ public class LocalAuthServerConfig extends AuthorizationServerConfigurerAdapter 
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory()
 			.withClient(localClient)
-			.redirectUris("*")
+			.redirectUris(redirectUris)
 			.resourceIds(localResourceId)
 			.authorizedGrantTypes(localGrantTypes)
 			.scopes(localScopes)

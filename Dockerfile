@@ -88,6 +88,7 @@ ENV localUserRole="ACTUATOR, DBA_EXAMPLE"
 ENV localUserEmail=localuser@example.gov
 ENV localUserOfficeState=WI
 ENV localContextPath=/auth/
+ENV localOauthClientRedirectUris="https://localhost"
 
 COPY --chown=1000:1000 docker/launch-app.sh ${LAUNCH_APP_SCRIPT}
 RUN chmod +x ${LAUNCH_APP_SCRIPT}

@@ -5,6 +5,7 @@ security:
       clientSecret: ${localOauthClientSecret}
       grantTypes: ${localOauthClientGrantTypes}
       scopes: ${localOauthClientScopes}
+      redirectUris: ${localOauthClientRedirectUris}
     resource:
       id: ${localOauthResourceId}
   water-auth-user:
