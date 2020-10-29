@@ -134,6 +134,8 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	private String csvAuthContexts;
 	@Value("${security.saml.idp.max-auth-response-age}")
 	private Integer maxAuthnResponseAge;
+	@Value("${security.saml.idp.max-auth-response-skew}")
+	private Integer maxAuthnResponseSkew;
 
 	//Local SAML Endpoint Configuration
 	@Value("${security.saml.endpoint.base}")
@@ -272,6 +274,7 @@ public class SAMLSecurityConfig extends WebSecurityConfigurerAdapter {
 	public WebSSOProfileConsumer webSSOprofileConsumer() {
 		WebSSOProfileConsumerImpl consumer = new WebSSOProfileConsumerImpl();
 		consumer.setMaxAuthenticationAge(maxAuthnResponseAge);
+		consumer.setResponseSkew(maxAuthnResponseSkew);
 		return consumer;
 	}
 

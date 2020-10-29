@@ -12,7 +12,8 @@ security:
       metadata-location: ${samlIdpMetadataLocation}
       provider: ${samlAuthnRequestProviderName:}
       entity-id: ${samlAuthnRequestEntityId}
-      max-auth-response-age: ${samlMaxAuthnResponseAge:14400}
+      max-auth-response-age: ${samlMaxAuthnResponseAge:172800}
+      max-auth-response-skew: ${samlMaxAuthnResponseSkew:172800}
       auth-contexts: ${samlAuthnContexts:}
       passive: ${samlPassive:false}
       force-auth: ${samlForceAuth:false}
