@@ -29,7 +29,7 @@
         <repository>
             <id>eros-artifactory-wma-maven-releases</id>
             <name>EROS Artifactory</name>
-            <url>https://artifactory.wma.usgs.gov/artifactory/eros-artifactory-wma-maven-releases</url>
+            <url>https://artifactory.wma.chs.usgs.gov/artifactory/eros-artifactory-wma-maven-releases</url>
         </repository>
     </repositories>
 
